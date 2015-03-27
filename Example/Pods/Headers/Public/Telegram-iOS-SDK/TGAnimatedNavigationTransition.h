@@ -1,0 +1,1 @@
+../../../../../Pod/Classes/ARC/Telegraph/legacy/TelegraphKit/TGAnimatedNavigationTransition.h

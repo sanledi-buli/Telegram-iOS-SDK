@@ -1,0 +1,1 @@
+../../../../../Pod/Classes/ARC/Telegraph/Telegraph/TGBingSearchResultItem.h

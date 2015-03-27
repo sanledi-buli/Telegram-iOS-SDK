@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rix-LT-E4z">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="B4w-iD-3pD">
+            <objects>
+                <navigationController id="rix-LT-E4z" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="iOZ-fm-6ug">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="lPt-G3-aIV" kind="relationship" relationship="rootViewController" id="LXL-tl-4fX"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oqD-te-0is" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-159" y="377"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Vcw-Qy-cJA">
+            <objects>
+                <viewController id="lPt-G3-aIV" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="vEA-NO-T5G"/>
+                        <viewControllerLayoutGuide type="bottom" id="ZzJ-X5-1xz"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4H7-Wx-tA3">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Telegram iOS SDK" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="273" translatesAutoresizingMaskIntoConstraints="NO" id="3Md-tG-mN6">
+                                <rect key="frame" x="164" y="72" width="273" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The main purpose of creating this project is to make lightweight and easy-to-use solution for Telegram SDK" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="568" translatesAutoresizingMaskIntoConstraints="NO" id="ynD-ZZ-ybd">
+                                <rect key="frame" x="16" y="114" width="568" height="41"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Second purpose is create Pod for such solution." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="568" translatesAutoresizingMaskIntoConstraints="NO" id="WUo-S9-M8M">
+                                <rect key="frame" x="16" y="163" width="568" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AoP-Bv-6Xc">
+                                <rect key="frame" x="244" y="550" width="112" height="30"/>
+                                <state key="normal" title="Start Messaging">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="YrR-TX-xJI" kind="show" id="p5J-vx-f3T"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="WUo-S9-M8M" firstAttribute="trailing" secondItem="ynD-ZZ-ybd" secondAttribute="trailing" id="1sb-aQ-Uyf"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ynD-ZZ-ybd" secondAttribute="trailing" id="5bi-6B-bN9"/>
+                            <constraint firstItem="ynD-ZZ-ybd" firstAttribute="leading" secondItem="4H7-Wx-tA3" secondAttribute="leadingMargin" id="8l0-oW-P3H"/>
+                            <constraint firstItem="3Md-tG-mN6" firstAttribute="top" secondItem="vEA-NO-T5G" secondAttribute="bottom" constant="8" id="Fua-n0-95d"/>
+                            <constraint firstItem="WUo-S9-M8M" firstAttribute="leading" secondItem="ynD-ZZ-ybd" secondAttribute="leading" id="MHi-0J-rG4"/>
+                            <constraint firstItem="ynD-ZZ-ybd" firstAttribute="top" secondItem="3Md-tG-mN6" secondAttribute="bottom" constant="18" id="Qg8-tt-YxP"/>
+                            <constraint firstAttribute="centerX" secondItem="AoP-Bv-6Xc" secondAttribute="centerX" id="Uk2-T7-6hp"/>
+                            <constraint firstAttribute="centerX" secondItem="3Md-tG-mN6" secondAttribute="centerX" id="cIY-NW-4jQ"/>
+                            <constraint firstItem="ZzJ-X5-1xz" firstAttribute="top" secondItem="AoP-Bv-6Xc" secondAttribute="bottom" constant="20" id="s06-vK-YwC"/>
+                            <constraint firstItem="WUo-S9-M8M" firstAttribute="top" secondItem="ynD-ZZ-ybd" secondAttribute="bottom" constant="8" id="yt6-R3-E6H"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="paz-Li-OS4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lLV-6Z-8SZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="529" y="377"/>
+        </scene>
+        <!--Login Phone View Controller-->
+        <scene sceneID="nRb-Z0-bnO">
+            <objects>
+                <viewController id="YrR-TX-xJI" customClass="TALoginPhoneViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="DoB-FT-ZHk"/>
+                        <viewControllerLayoutGuide type="bottom" id="xeL-RE-imD"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="27D-2P-Qk3">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="suX-tu-y34">
+                                <rect key="frame" x="16" y="72" width="96" height="30"/>
+                                <state key="normal" title="Country Code">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="countryTapped:" destination="YrR-TX-xJI" eventType="touchUpInside" id="0kq-69-pAg"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="+" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fhV-YA-lXd">
+                                <rect key="frame" x="16" y="110" width="97" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="97" id="gCj-O9-UcZ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="YrR-TX-xJI" id="loc-ea-jxK"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gGL-Eb-aAM">
+                                <rect key="frame" x="121" y="110" width="168" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="168" id="nr3-26-MI6"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="YrR-TX-xJI" id="UdI-dv-o8Y"/>
+                                </connections>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9uJ-Cq-JgQ">
+                                <rect key="frame" x="262" y="148" width="77" height="30"/>
+                                <state key="normal" title="Send Code">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="sendCodeButtonTapped:" destination="YrR-TX-xJI" eventType="touchUpInside" id="cqx-YE-o5S"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="gGL-Eb-aAM" firstAttribute="leading" secondItem="fhV-YA-lXd" secondAttribute="trailing" constant="8" id="209-dU-1VS"/>
+                            <constraint firstItem="fhV-YA-lXd" firstAttribute="top" secondItem="suX-tu-y34" secondAttribute="bottom" constant="8" id="Ftq-pL-q70"/>
+                            <constraint firstItem="suX-tu-y34" firstAttribute="leading" secondItem="27D-2P-Qk3" secondAttribute="leadingMargin" id="b9W-Rf-vpZ"/>
+                            <constraint firstItem="fhV-YA-lXd" firstAttribute="top" secondItem="gGL-Eb-aAM" secondAttribute="top" id="iOo-hw-Vle"/>
+                            <constraint firstItem="suX-tu-y34" firstAttribute="leading" secondItem="fhV-YA-lXd" secondAttribute="leading" id="iau-He-UNa"/>
+                            <constraint firstItem="suX-tu-y34" firstAttribute="top" secondItem="DoB-FT-ZHk" secondAttribute="bottom" constant="8" id="imr-yR-1Lh"/>
+                            <constraint firstAttribute="centerX" secondItem="9uJ-Cq-JgQ" secondAttribute="centerX" id="j3l-sX-6ux"/>
+                            <constraint firstItem="9uJ-Cq-JgQ" firstAttribute="top" secondItem="gGL-Eb-aAM" secondAttribute="bottom" constant="8" id="jd2-ra-Y5n"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="countryButton" destination="suX-tu-y34" id="GWh-0J-41d"/>
+                        <outlet property="countryCodeTextField" destination="fhV-YA-lXd" id="mR5-Kc-xyI"/>
+                        <outlet property="phoneTextField" destination="gGL-Eb-aAM" id="kDX-jt-xXT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="psp-tT-YT6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1252" y="377"/>
+        </scene>
+    </scenes>
+</document>

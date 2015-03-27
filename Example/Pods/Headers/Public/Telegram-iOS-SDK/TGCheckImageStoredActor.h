@@ -1,0 +1,1 @@
+../../../../../Pod/Classes/ARC/Telegraph/Telegraph/TGCheckImageStoredActor.h
