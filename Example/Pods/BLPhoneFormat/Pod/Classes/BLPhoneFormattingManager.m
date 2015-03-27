@@ -282,7 +282,7 @@ shouldChangeCharactersInRange:(NSRange)range
     if (string.length == 0 || [self phoneNumber].length == 0 || [self countryCode].length <= 1)
         self.formattedPhone = @"";
     else
-        self.formattedPhone = [[RMPhoneFormat instance] format:string implicitPlus:NO];
+        self.formattedPhone = [[RMPhoneFormat instance] format:string implicitPlus:true];
 }
 - (void) format {
     [self updateTitleText];

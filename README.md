@@ -20,9 +20,9 @@ it, simply add the following line to your Podfile:
 
 ## Author
 
-Hariton Batkov, hariton.batkov@p-product.com
+Hariton Batkov, batkov@i.ua
 
 ## License
 
-Telegram-iOS-SDK is available under the MIT license. See the LICENSE file for more info.
+Telegram-iOS-SDK is available under the GPLv2 license. See the LICENSE file for more info.
 

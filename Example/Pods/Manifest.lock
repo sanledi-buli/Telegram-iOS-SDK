@@ -1,6 +1,6 @@
 PODS:
-  - BLContactsViewController (0.1.1)
-  - BLPhoneFormat (0.3.0)
+  - BLContactsViewController (0.1.2)
+  - BLPhoneFormat (0.3.1)
   - iOS-WebP (0.4):
     - libwebp (~> 0.4.2)
   - libwebp (0.4.3):
@@ -27,13 +27,11 @@ PODS:
   - libwebp/utils (0.4.3):
     - libwebp/core
   - libwebp/webp (0.4.3)
-  - OpenSSL-Universal (1.0.1.k)
   - pop (1.0.7)
   - Telegram-iOS-SDK (0.1.0):
     - BLContactsViewController
     - BLPhoneFormat
     - iOS-WebP
-    - OpenSSL-Universal (= 1.0.1.k)
     - pop
 
 DEPENDENCIES:
@@ -44,12 +42,11 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  BLContactsViewController: 0ceae123429213c1bc2effcd643ae9a1576f4ef0
-  BLPhoneFormat: b9375978cd0296519eef6f642ebb5ebf7f99bce2
+  BLContactsViewController: dd2f27b4bf9f8cd82e410ee5bd4c5c4caa240288
+  BLPhoneFormat: 1382d9dd80e6b3fc2bc932c06648c32d11a440dc
   iOS-WebP: 374cde38d72256ce504902953ad604791194600f
   libwebp: 360ed8bc4ec8da413f07f84071e7f5a5c67a285d
-  OpenSSL-Universal: 60ee5ddf6530100c0aa702c2e0c9881cfd4a89a5
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
-  Telegram-iOS-SDK: 63e55f571ec65511cb0fec1a856fc4ee650f1e3d
+  Telegram-iOS-SDK: d6f417004f58f8e2c643c95145cae1ec2148992a
 
 COCOAPODS: 0.36.1

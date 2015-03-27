@@ -10,20 +10,13 @@
 #define COCOAPODS_POD_AVAILABLE_BLContactsViewController
 #define COCOAPODS_VERSION_MAJOR_BLContactsViewController 0
 #define COCOAPODS_VERSION_MINOR_BLContactsViewController 1
-#define COCOAPODS_VERSION_PATCH_BLContactsViewController 1
+#define COCOAPODS_VERSION_PATCH_BLContactsViewController 2
 
 // BLPhoneFormat
 #define COCOAPODS_POD_AVAILABLE_BLPhoneFormat
 #define COCOAPODS_VERSION_MAJOR_BLPhoneFormat 0
 #define COCOAPODS_VERSION_MINOR_BLPhoneFormat 3
-#define COCOAPODS_VERSION_PATCH_BLPhoneFormat 0
-
-// OpenSSL-Universal
-#define COCOAPODS_POD_AVAILABLE_OpenSSL_Universal
-// This library does not follow semantic-versioning,
-// so we were not able to define version macros.
-// Please contact the author.
-// Version: 1.0.1.k.
+#define COCOAPODS_VERSION_PATCH_BLPhoneFormat 1
 
 // Telegram-iOS-SDK
 #define COCOAPODS_POD_AVAILABLE_Telegram_iOS_SDK
