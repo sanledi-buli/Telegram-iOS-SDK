@@ -1626,7 +1626,7 @@
 		4FAE10413F88CAA8260F8072 /* TGModernConversationViewLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 828A85B250465C2A799AC0CD /* TGModernConversationViewLayout.h */; };
 		4FAE56F4AC25241D2289A44F /* TGLabelMenuItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 299E3F64CA7772A19B2E91BC /* TGLabelMenuItemView.m */; settings = {COMPILER_FLAGS = "-Wall"; }; };
 		4FBE5311D082FFC91E57A64D /* TGModernGalleryVideoScrubbingInterfaceView.h in Headers */ = {isa = PBXBuildFile; fileRef = F8218E9A0FA1BBDFC4A8AC1D /* TGModernGalleryVideoScrubbingInterfaceView.h */; };
-		4FC9F7510E639E0843798C89 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A8168584897A5B647857150 /* GCDAsyncSocket.h */; };
+		4FC9F7510E639E0843798C89 /* TGGCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A8168584897A5B647857150 /* TGGCDAsyncSocket.h */; };
 		4FD478E4D8C3EC37A269502F /* TGModernButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 2580401C151AF42EB08ACD46 /* TGModernButton.h */; };
 		4FE3A7E3F94C4C5DB5341447 /* TGModernConversationEditingPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BB2B7B115C0B5CD60E496F1 /* TGModernConversationEditingPanel.h */; };
 		4FEB389F2F48A6CE628DDF9F /* TLContactSuggested.mm in Sources */ = {isa = PBXBuildFile; fileRef = E049A905E92B1D5DD85F597D /* TLContactSuggested.mm */; settings = {COMPILER_FLAGS = "-Wall"; }; };
@@ -2220,7 +2220,7 @@
 		6EBB27C9F4A3A852478A3208 /* TLRPCcontacts_resolveUsername.h in Headers */ = {isa = PBXBuildFile; fileRef = C51A04B5195CC5CAE9234F59 /* TLRPCcontacts_resolveUsername.h */; };
 		6ECC40F54C31522993AA5F99 /* TGPushActionsRequestBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 76F890332AC4C16194099AF5 /* TGPushActionsRequestBuilder.m */; settings = {COMPILER_FLAGS = "-Wall"; }; };
 		6ED3F838BD47C9448185EABC /* TGActionMediaAttachment+Telegraph.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5448508B410730EBBCB571 /* TGActionMediaAttachment+Telegraph.m */; settings = {COMPILER_FLAGS = "-Wall"; }; };
-		6ED63AC5ECB6E30436082FED /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B17FC980B1428C84D79D30E /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-Wall"; }; };
+		6ED63AC5ECB6E30436082FED /* TGGCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B17FC980B1428C84D79D30E /* TGGCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-Wall"; }; };
 		6EDBBA35F51682202AB67F82 /* TLMetaField.h in Headers */ = {isa = PBXBuildFile; fileRef = 952F19BA92ADC5F6F656CAE4 /* TLMetaField.h */; };
 		6EE3933197B3B4EA1E1C3344 /* TLBool.m in Sources */ = {isa = PBXBuildFile; fileRef = F106687346FDABBB1BF71ECF /* TLBool.m */; settings = {COMPILER_FLAGS = "-Wall"; }; };
 		6EE7633CD20E6B45ED5699F0 /* TGMessageModernConversationItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D09D49ABBEC45D02DFF9AA3F /* TGMessageModernConversationItem.h */; };
@@ -2354,7 +2354,7 @@
 		74C2AD75B945C76213CF139B /* TGSynchronizePreferencesActor.h in Headers */ = {isa = PBXBuildFile; fileRef = D017E3377B8112280855C02E /* TGSynchronizePreferencesActor.h */; };
 		74C5AE58B7C4F721F8E0384B /* TGDatacenterWatchdogActor.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B8607DFE2C44DB85677081 /* TGDatacenterWatchdogActor.m */; settings = {COMPILER_FLAGS = "-Wall"; }; };
 		74C843C88AE5D74B25FED5F3 /* TGModernMediaListImageItemView.h in Headers */ = {isa = PBXBuildFile; fileRef = 234263E904CB66EE63B73D4E /* TGModernMediaListImageItemView.h */; };
-		74D15328203F593C487AE05D /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B17FC980B1428C84D79D30E /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-Wall"; }; };
+		74D15328203F593C487AE05D /* TGGCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B17FC980B1428C84D79D30E /* TGGCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-Wall"; }; };
 		74D3D6BFE3E5AA89C243E2D7 /* TLInputVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = B17C0B54BA02DAACD65B4A7E /* TLInputVideo.h */; };
 		750BE5716A7D63FE5287A7CD /* TGMediaItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 18D7F14233EDEE3E1A32223E /* TGMediaItem.h */; };
 		752AEB5061543D5AB3E3659D /* TLMetaObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 9176F0F529734BD9A82F3644 /* TLMetaObject.h */; };
@@ -3077,7 +3077,7 @@
 		9785A1782EF91578DC5C4E0A /* TGLocationMediaAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4167B32A7E477192EF4A08 /* TGLocationMediaAttachment.m */; settings = {COMPILER_FLAGS = "-Wall"; }; };
 		9787F331DFB18F350F88D75F /* TGTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C031D4DD0BFC2219305668E1 /* TGTableViewCell.h */; };
 		978F9A1D3245616928619C5B /* TGGenericPeerMediaGalleryImageItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D18C6F9CFA528B379301BE5 /* TGGenericPeerMediaGalleryImageItem.h */; };
-		9791B2E54EAD0E8E4EF11948 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A8168584897A5B647857150 /* GCDAsyncSocket.h */; };
+		9791B2E54EAD0E8E4EF11948 /* TGGCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A8168584897A5B647857150 /* TGGCDAsyncSocket.h */; };
 		97B92FFBA01FFF6C613A19AD /* opus_multistream.h in Headers */ = {isa = PBXBuildFile; fileRef = 18A1F9F7C7CC47A955A1B513 /* opus_multistream.h */; };
 		97C48AA16CE5220263CF1C75 /* TGConversationActivityRequestBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = D37C9DB5B743567C7454F400 /* TGConversationActivityRequestBuilder.m */; settings = {COMPILER_FLAGS = "-Wall"; }; };
 		97D53A761D462BCB8E363E91 /* TLauth_CheckedPhone.mm in Sources */ = {isa = PBXBuildFile; fileRef = 319520E0BB10E563C46E9A2B /* TLauth_CheckedPhone.mm */; settings = {COMPILER_FLAGS = "-Wall"; }; };
@@ -5815,7 +5815,7 @@
 		2AAD9EEA206CFB315B01D1A6 /* TGModernButtonView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TGModernButtonView.m; sourceTree = "<group>"; };
 		2ACEC158D79597B87FF76C32 /* Pods-Tests-BLContactsViewController-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Pods-Tests-BLContactsViewController-prefix.pch"; path = "../Pods-Tests-BLContactsViewController/Pods-Tests-BLContactsViewController-prefix.pch"; sourceTree = "<group>"; };
 		2B0BEAEED646F5A4BF56901D /* TGPeerSettingsActor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TGPeerSettingsActor.m; sourceTree = "<group>"; };
-		2B17FC980B1428C84D79D30E /* GCDAsyncSocket.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		2B17FC980B1428C84D79D30E /* TGGCDAsyncSocket.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TGGCDAsyncSocket.m; sourceTree = "<group>"; };
 		2B42F86C22B778A675DA2A6A /* TLRPCcontacts_search.mm */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.objcpp; path = TLRPCcontacts_search.mm; sourceTree = "<group>"; };
 		2B4FBCEEB7D7B2EF4A54C7D9 /* TLMetaRpc.mm */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.objcpp; path = TLMetaRpc.mm; sourceTree = "<group>"; };
 		2B6FAB6D3640E8A00E7CF55F /* Pods-Tests-BLContactsViewController.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests-BLContactsViewController.xcconfig"; path = "../Pods-Tests-BLContactsViewController/Pods-Tests-BLContactsViewController.xcconfig"; sourceTree = "<group>"; };
@@ -6826,7 +6826,7 @@
 		8A02A2955649FB306DEEF00F /* RMPhoneFormat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMPhoneFormat.h; path = Pod/Classes/RMPhoneFormat.h; sourceTree = "<group>"; };
 		8A35B9F25C29FE4E0A6B35FD /* TGSecretTimerValueControllerItemView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TGSecretTimerValueControllerItemView.h; sourceTree = "<group>"; };
 		8A6F240E10D1C443A149D64B /* TGChangeNameActor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TGChangeNameActor.m; sourceTree = "<group>"; };
-		8A8168584897A5B647857150 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		8A8168584897A5B647857150 /* TGGCDAsyncSocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TGGCDAsyncSocket.h; sourceTree = "<group>"; };
 		8A8DD3C92B5EC19DED2CEE3C /* TLmessages_Chat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TLmessages_Chat.h; sourceTree = "<group>"; };
 		8A9110D90BBF968E6996EC5C /* TGInstantPreviewTouchAreaModel.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TGInstantPreviewTouchAreaModel.h; sourceTree = "<group>"; };
 		8AB606478DACF6445982D7A9 /* TLRPCmessages_getDialogs.mm */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.objcpp; path = TLRPCmessages_getDialogs.mm; sourceTree = "<group>"; };
@@ -8267,8 +8267,8 @@
 		256BD924B819C25165D2B347 /* AsyncSocket */ = {
 			isa = PBXGroup;
 			children = (
-				8A8168584897A5B647857150 /* GCDAsyncSocket.h */,
-				2B17FC980B1428C84D79D30E /* GCDAsyncSocket.m */,
+				8A8168584897A5B647857150 /* TGGCDAsyncSocket.h */,
+				2B17FC980B1428C84D79D30E /* TGGCDAsyncSocket.m */,
 			);
 			path = AsyncSocket;
 			sourceTree = "<group>";
@@ -11437,7 +11437,7 @@
 				122DA040BC119676C8F954E9 /* TGFMDatabase.h in Headers */,
 				A521F0717FC2C39C13DFE494 /* TGFMDatabaseAdditions.h in Headers */,
 				2AAB79E52727199D9CE5E3BD /* TGFMResultSet.h in Headers */,
-				4FC9F7510E639E0843798C89 /* GCDAsyncSocket.h in Headers */,
+				4FC9F7510E639E0843798C89 /* TGGCDAsyncSocket.h in Headers */,
 				78B9FA8071B2E27D3AC998AE /* TGHPGrowingTextView.h in Headers */,
 				23F7878A3415AD3875AB3AFA /* TGHPTextViewInternal.h in Headers */,
 				37D337593F076C85CD9D03A4 /* JNWSpringAnimation.h in Headers */,
@@ -12822,7 +12822,7 @@
 				AF0B684200B006B2A37A649D /* TGFMDatabase.h in Headers */,
 				40D59A3B33CF83781ADBCA1E /* TGFMDatabaseAdditions.h in Headers */,
 				2E27E1C7630204F118F7E348 /* TGFMResultSet.h in Headers */,
-				9791B2E54EAD0E8E4EF11948 /* GCDAsyncSocket.h in Headers */,
+				9791B2E54EAD0E8E4EF11948 /* TGGCDAsyncSocket.h in Headers */,
 				241604932FF4F0D8F291F05A /* TGHPGrowingTextView.h in Headers */,
 				5CACB3D27A3829B3C73C84DF /* TGHPTextViewInternal.h in Headers */,
 				A4049868BAC37682F5CF2DCB /* JNWSpringAnimation.h in Headers */,
@@ -14615,7 +14615,7 @@
 				7FADFB7A941D33D0B4E49070 /* TGFMDatabase.m in Sources */,
 				B463FD153AAF679ACFAA17CA /* TGFMDatabaseAdditions.m in Sources */,
 				BD96F066E4AD135DB7BB26C7 /* TGFMResultSet.m in Sources */,
-				6ED63AC5ECB6E30436082FED /* GCDAsyncSocket.m in Sources */,
+				6ED63AC5ECB6E30436082FED /* TGGCDAsyncSocket.m in Sources */,
 				6815E75DEF2F8735AB014EC8 /* TGHPGrowingTextView.m in Sources */,
 				DE64F002F5F24AB8E28E7AA1 /* TGHPTextViewInternal.m in Sources */,
 				26598EB0D6AA089192F9527C /* JNWSpringAnimation.m in Sources */,
@@ -15900,7 +15900,7 @@
 				244434EFCD23A1A75FEDEB4F /* TGFMDatabase.m in Sources */,
 				2331B98463BEACE975490430 /* TGFMDatabaseAdditions.m in Sources */,
 				E36070DFCD249BBF57B589A5 /* TGFMResultSet.m in Sources */,
-				74D15328203F593C487AE05D /* GCDAsyncSocket.m in Sources */,
+				74D15328203F593C487AE05D /* TGGCDAsyncSocket.m in Sources */,
 				A595660760BE31EE70E8C12E /* TGHPGrowingTextView.m in Sources */,
 				E94530367248915241FBFF98 /* TGHPTextViewInternal.m in Sources */,
 				1452EC23519AEDAAC2BCA09F /* JNWSpringAnimation.m in Sources */,

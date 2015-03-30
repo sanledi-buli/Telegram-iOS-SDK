@@ -11,7 +11,7 @@
 #import "MTQueue.h"
 #import "MTTimer.h"
 
-#import "GCDAsyncSocket.h"
+#import "TGGCDAsyncSocket.h"
 #import <sys/socket.h>
 
 #import "MTInternalId.h"
@@ -30,9 +30,9 @@ typedef enum {
 static const NSTimeInterval MTMinTcpResponseTimeout = 12.0;
 static const NSUInteger MTTcpProgressCalculationThreshold = 4096;
 
-@interface MTTcpConnection () <GCDAsyncSocketDelegate>
+@interface MTTcpConnection () <TGGCDAsyncSocketDelegate>
 {   
-    GCDAsyncSocket *_socket;
+    TGGCDAsyncSocket *_socket;
     bool _closed;
     
     uint8_t _quickAckByte;
@@ -84,7 +84,7 @@ static const NSUInteger MTTcpProgressCalculationThreshold = 4096;
 
 - (void)dealloc
 {
-    GCDAsyncSocket *socket = _socket;
+    TGGCDAsyncSocket *socket = _socket;
     socket.delegate = nil;
     _socket = nil;
     
@@ -111,7 +111,7 @@ static const NSUInteger MTTcpProgressCalculationThreshold = 4096;
     {
         if (_socket == nil)
         {
-            _socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:[[MTTcpConnection tcpQueue] nativeQueue]];
+            _socket = [[TGGCDAsyncSocket alloc] initWithDelegate:self delegateQueue:[[MTTcpConnection tcpQueue] nativeQueue]];
             
             MTLog(@"[MTTcpConnection#%x connecting to %@:%d]", (int)self, _address.ip, (int)_address.port);
             
@@ -244,7 +244,7 @@ static const NSUInteger MTTcpProgressCalculationThreshold = 4096;
     [self stop];
 }
 
-- (void)socket:(GCDAsyncSocket *)__unused socket didReadPartialDataOfLength:(NSUInteger)partialLength tag:(long)__unused tag
+- (void)socket:(TGGCDAsyncSocket *)__unused socket didReadPartialDataOfLength:(NSUInteger)partialLength tag:(long)__unused tag
 {
     if (_closed)
         return;
@@ -265,7 +265,7 @@ static const NSUInteger MTTcpProgressCalculationThreshold = 4096;
     }
 }
 
-- (void)socket:(GCDAsyncSocket *)__unused socket didReadData:(NSData *)data withTag:(long)tag
+- (void)socket:(TGGCDAsyncSocket *)__unused socket didReadData:(NSData *)data withTag:(long)tag
 {
     if (_closed)
         return;
@@ -400,14 +400,14 @@ static const NSUInteger MTTcpProgressCalculationThreshold = 4096;
     }
 }
 
-- (void)socket:(GCDAsyncSocket *)__unused socket didConnectToHost:(NSString *)__unused host port:(uint16_t)__unused port
+- (void)socket:(TGGCDAsyncSocket *)__unused socket didConnectToHost:(NSString *)__unused host port:(uint16_t)__unused port
 {
     id<MTTcpConnectionDelegate> delegate = _delegate;
     if ([delegate respondsToSelector:@selector(tcpConnectionOpened:)])
         [delegate tcpConnectionOpened:self];
 }
 
-- (void)socketDidDisconnect:(GCDAsyncSocket *)__unused socket withError:(NSError *)error
+- (void)socketDidDisconnect:(TGGCDAsyncSocket *)__unused socket withError:(NSError *)error
 {
     if (error != nil)
         MTLog(@"[MTTcpConnection#%x disconnected from %@ (%@)]", (int)self, _address.ip, error);

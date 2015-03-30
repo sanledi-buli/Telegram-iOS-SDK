@@ -1,6 +1,6 @@
 #import "TGHttpServerActor.h"
 
-#import "GCDAsyncSocket.h"
+#import "TGGCDAsyncSocket.h"
 
 #import "ActionStage.h"
 #import "TGCommon.h"
@@ -45,7 +45,7 @@ static void dispatchOnServerQueue(dispatch_block_t block, bool synchronous)
 
 @property (nonatomic, strong) NSString *serverUrl;
 
-@property (nonatomic, strong) GCDAsyncSocket *serverSocket;
+@property (nonatomic, strong) TGGCDAsyncSocket *serverSocket;
 @property (nonatomic, strong) NSMutableArray *clientSockets;
 
 @property (nonatomic, strong) NSString *filePath;
@@ -125,7 +125,7 @@ static void dispatchOnServerQueue(dispatch_block_t block, bool synchronous)
         {
             int port = 12001;
             
-            _serverSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:serverQueue()];
+            _serverSocket = [[TGGCDAsyncSocket alloc] initWithDelegate:self delegateQueue:serverQueue()];
             NSError *error = nil;
             [_serverSocket acceptOnPort:(uint16_t)port error:&error];
             
@@ -155,7 +155,7 @@ static void dispatchOnServerQueue(dispatch_block_t block, bool synchronous)
     [super watcherJoined:watcherHandle options:options waitingInActorQueue:waitingInActorQueue];
 }
 
-- (void)socket:(GCDAsyncSocket *)socket didAcceptNewSocket:(GCDAsyncSocket *)newSocket
+- (void)socket:(TGGCDAsyncSocket *)socket didAcceptNewSocket:(TGGCDAsyncSocket *)newSocket
 {
     if (socket == _serverSocket)
     {
@@ -164,7 +164,7 @@ static void dispatchOnServerQueue(dispatch_block_t block, bool synchronous)
     }
 }
 
-- (void)socket:(GCDAsyncSocket *)socket didReadData:(NSData *)data withTag:(long)__unused tag
+- (void)socket:(TGGCDAsyncSocket *)socket didReadData:(NSData *)data withTag:(long)__unused tag
 {
     if (socket != _serverSocket)
     {
@@ -214,7 +214,7 @@ static void dispatchOnServerQueue(dispatch_block_t block, bool synchronous)
     }
 }
 
-- (void)socketDidDisconnect:(GCDAsyncSocket *)socket withError:(NSError *)error
+- (void)socketDidDisconnect:(TGGCDAsyncSocket *)socket withError:(NSError *)error
 {
     TGLog(@"Socket disconnected with error: %@", error);
     if (socket != _serverSocket)
@@ -223,7 +223,7 @@ static void dispatchOnServerQueue(dispatch_block_t block, bool synchronous)
 
 - (void)closeSockets
 {
-    GCDAsyncSocket *serverSocket = _serverSocket;
+    TGGCDAsyncSocket *serverSocket = _serverSocket;
     _serverSocket = nil;
     
     NSMutableArray *clientSockets = _clientSockets;
@@ -233,7 +233,7 @@ static void dispatchOnServerQueue(dispatch_block_t block, bool synchronous)
     {
         [serverSocket disconnect];
         
-        for (GCDAsyncSocket *clientSocket in clientSockets)
+        for (TGGCDAsyncSocket *clientSocket in clientSockets)
         {
             [clientSocket synchronouslySetDelegate:nil];
             [clientSocket disconnect];
