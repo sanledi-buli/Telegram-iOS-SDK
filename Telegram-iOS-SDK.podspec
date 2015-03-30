@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
   s.resource_bundles = {
     'Telegram-iOS-SDK' => ['Pod/Assets/*']
   }
-  s.frameworks = 'AddressBook', 'AddressBookUI', 'CoreLocation', 'libwebp'
+  s.frameworks = 'AddressBook', 'AddressBookUI', 'CoreLocation'
   s.dependency 'BLPhoneFormat'
   s.dependency 'BLContactsViewController'   
   s.dependency 'pop'
