@@ -8,30 +8,30 @@
 
 #import <Foundation/Foundation.h>
 #import "sqlite3.h"
-#import "FMResultSet.h"
+#import "TGFMResultSet.h"
 
 
 #if ! __has_feature(objc_arc)
-    #define FMDBAutorelease(__v) ([__v autorelease]);
-    #define FMDBReturnAutoreleased FMDBAutorelease
+    #define TGFMDBAutorelease(__v) ([__v autorelease]);
+    #define TGFMDBReturnAutoreleased TGFMDBAutorelease
 
-    #define FMDBRetain(__v) ([__v retain]);
-    #define FMDBReturnRetained FMDBRetain
+    #define TGFMDBRetain(__v) ([__v retain]);
+    #define TGFMDBReturnRetained TGFMDBRetain
 
-    #define FMDBRelease(__v) ([__v release]);
+    #define TGFMDBRelease(__v) ([__v release]);
 #else
     // -fobjc-arc
-    #define FMDBAutorelease(__v)
-    #define FMDBReturnAutoreleased(__v) (__v)
+    #define TGFMDBAutorelease(__v)
+    #define TGFMDBReturnAutoreleased(__v) (__v)
 
-    #define FMDBRetain(__v)
-    #define FMDBReturnRetained(__v) (__v)
+    #define TGFMDBRetain(__v)
+    #define TGFMDBReturnRetained(__v) (__v)
 
-    #define FMDBRelease(__v)
+    #define TGFMDBRelease(__v)
 #endif
 
 
-@interface FMDatabase : NSObject  {
+@interface TGFMDatabase : NSObject  {
     
     sqlite3*            _db;
     NSString*           _databasePath;
@@ -94,10 +94,10 @@
 - (BOOL)executeUpdate:(NSString*)sql withArgumentsInArray:(NSArray *)arguments;
 - (BOOL)executeUpdate:(NSString*)sql withParameterDictionary:(NSDictionary *)arguments;
 
-- (FMResultSet *)executeQuery:(NSString*)sql, ...;
-- (FMResultSet *)executeQueryWithFormat:(NSString*)format, ...;
-- (FMResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray *)arguments;
-- (FMResultSet *)executeQuery:(NSString *)sql withParameterDictionary:(NSDictionary *)arguments;
+- (TGFMResultSet *)executeQuery:(NSString*)sql, ...;
+- (TGFMResultSet *)executeQueryWithFormat:(NSString*)format, ...;
+- (TGFMResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray *)arguments;
+- (TGFMResultSet *)executeQuery:(NSString *)sql withParameterDictionary:(NSDictionary *)arguments;
 
 - (BOOL)rollback;
 - (BOOL)commit;
@@ -124,7 +124,7 @@
 
 @end
 
-@interface FMStatement : NSObject {
+@interface TGFMStatement : NSObject {
     sqlite3_stmt *_statement;
     NSString *_query;
     long _useCount;

@@ -1,6 +1,6 @@
 #import "TGDatabase.h"
 
-#import "FMDatabase.h"
+#import "TGFMDatabase.h"
 
 #import "ATQueue.h"
 
@@ -317,9 +317,9 @@ static TGFutureAction *futureActionDeserializer(int type)
 @property (nonatomic, strong) NSString *databasePath;
 @property (nonatomic, strong) NSString *indexDatabasePath;
 
-@property (nonatomic, strong) FMDatabase *database;
-@property (nonatomic, strong) FMDatabase *indexDatabase;
-@property (nonatomic, strong) FMDatabase *filesDatabase;
+@property (nonatomic, strong) TGFMDatabase *database;
+@property (nonatomic, strong) TGFMDatabase *indexDatabase;
+@property (nonatomic, strong) TGFMDatabase *filesDatabase;
 
 @property (nonatomic) TGDatabaseState cachedDatabaseState;
 
@@ -571,7 +571,7 @@ static void addVideoMid(TGDatabase *database, int mid, int64_t videoId, bool isL
 {
     NSString *tableName = isLocal ? database.localFilesTableName : database.videosTableName;
     
-    FMResultSet *result = [database.database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mids FROM %@ WHERE vid=?", tableName], [[NSNumber alloc] initWithLongLong:videoId]];
+    TGFMResultSet *result = [database.database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mids FROM %@ WHERE vid=?", tableName], [[NSNumber alloc] initWithLongLong:videoId]];
     if ([result next])
     {
         bool found = false;
@@ -604,7 +604,7 @@ static void removeVideoMid(TGDatabase *database, int mid, int64_t videoId, bool 
 {
     NSString *tableName = isLocal ? database.localFilesTableName : database.videosTableName;
     
-    FMResultSet *result = [database.database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mids FROM %@ WHERE vid=?", tableName], [[NSNumber alloc] initWithLongLong:videoId]];
+    TGFMResultSet *result = [database.database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mids FROM %@ WHERE vid=?", tableName], [[NSNumber alloc] initWithLongLong:videoId]];
     if ([result next])
     {
         NSMutableData *midsData = [[result dataForColumn:@"mids"] mutableCopy];
@@ -652,7 +652,7 @@ static void removeVideoMid(TGDatabase *database, int mid, int64_t videoId, bool 
 
 static void addFileMid(TGDatabase *database, int mid, int type, int64_t fileId)
 {
-    FMResultSet *result = [database.database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mids FROM %@ WHERE type=? AND file_id=?", database.storedFilesTableName], [[NSNumber alloc] initWithInteger:type], [[NSNumber alloc] initWithLongLong:fileId]];
+    TGFMResultSet *result = [database.database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mids FROM %@ WHERE type=? AND file_id=?", database.storedFilesTableName], [[NSNumber alloc] initWithInteger:type], [[NSNumber alloc] initWithLongLong:fileId]];
     if ([result next])
     {
         bool found = false;
@@ -685,7 +685,7 @@ static void removeFileMid(TGDatabase *database, int mid, int type, int64_t fileI
 {
     NSString *tableName = database.storedFilesTableName;
     
-    FMResultSet *result = [database.database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mids FROM %@ WHERE type=? AND file_id=?", tableName], [[NSNumber alloc] initWithInt:type], [[NSNumber alloc] initWithLongLong:fileId]];
+    TGFMResultSet *result = [database.database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mids FROM %@ WHERE type=? AND file_id=?", tableName], [[NSNumber alloc] initWithInt:type], [[NSNumber alloc] initWithLongLong:fileId]];
     if ([result next])
     {
         NSMutableData *midsData = [[result dataForColumn:@"mids"] mutableCopy];
@@ -906,7 +906,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
 
 - (void)explainQuery:(NSString *)query
 {
-    FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"EXPLAIN QUERY PLAN %@", query]];
+    TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"EXPLAIN QUERY PLAN %@", query]];
     while ([result next])
     {
         TGLog(@"%d %d %d :: %@", [result intForColumnIndex:0], [result intForColumnIndex:1], [result intForColumnIndex:2],
@@ -923,7 +923,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
 
 - (bool)table:(NSString *)table containsField:(NSString *)field
 {
-    FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"PRAGMA table_info(%@)", table]];
+    TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"PRAGMA table_info(%@)", table]];
     while ([result next])
     {
         if ([[result stringForColumnIndex:1] isEqualToString:field])
@@ -985,7 +985,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
     
     [_database executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (uid INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT, local_first_name TEXT, local_last_name TEXT, phone_number TEXT, access_hash INTEGER, sex INTEGER, photo_small TEXT, photo_medium TEXT, photo_big TEXT, last_seen INTEGER, username STRING)", _usersTableName]];
     
-    FMResultSet *usersHaveUsernameResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"PRAGMA table_info(%@)", _usersTableName]];
+    TGFMResultSet *usersHaveUsernameResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"PRAGMA table_info(%@)", _usersTableName]];
     bool usersHaveUsername = false;
     while ([usersHaveUsernameResult next])
     {
@@ -1003,7 +1003,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
     [_database executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (cid INTEGER PRIMARY KEY, date INTEGER, from_uid INTEGER, message TEXT, media BLOB, unread_count INTEGER, flags INTEGER, chat_title TEXT, chat_photo BLOB, participants BLOB, participants_count INTEGER, chat_version INTEGER, service_unread INTEGER)", _conversationListTableName]];
     [_database executeUpdate:[NSString stringWithFormat:@"CREATE INDEX IF NOT EXISTS date ON %@ (date DESC)", _conversationListTableName]];
     
-    FMResultSet *serviceUnreadResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT service_unread FROM %@ LIMIT 1", _conversationListTableName]];
+    TGFMResultSet *serviceUnreadResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT service_unread FROM %@ LIMIT 1", _conversationListTableName]];
     if (![serviceUnreadResult next])
         [_database executeUpdate:[[NSString alloc] initWithFormat:@"ALTER TABLE %@ ADD COLUMN service_unread INTEGER", _conversationListTableName]];
     
@@ -1027,7 +1027,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
     if ([self customProperty:@"hasPartialIndexOnUnread"].length == 0)
     {
         TGLog(@"===== Upgrading database (unread partial index)");
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid, cid, outgoing FROM %@ WHERE unread!=0 AND unread IS NOT NULL", _messagesTableName]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid, cid, outgoing FROM %@ WHERE unread!=0 AND unread IS NOT NULL", _messagesTableName]];
         int cidIndex = [result columnIndexForName:@"cid"];
         int midIndex = [result columnIndexForName:@"mid"];
         int outgoingIndex = [result columnIndexForName:@"outgoing"];
@@ -1107,7 +1107,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
     
     [_database executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (id INTEGER, type INTEGER, data BLOB, random_id INTEGER, sort_key INTEGER AUTO_INCREMENT, PRIMARY KEY(id, type))", _futureActionsTableName]];
     
-    FMResultSet *futureActionsHasSortingKeyResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"PRAGMA table_info(%@)", _futureActionsTableName]];
+    TGFMResultSet *futureActionsHasSortingKeyResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"PRAGMA table_info(%@)", _futureActionsTableName]];
     bool futureActionsHasSortingKey = false;
     while ([futureActionsHasSortingKeyResult next])
     {
@@ -1119,7 +1119,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
     }
     if (!futureActionsHasSortingKey)
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ ORDER BY insert_date ASC", _futureActionsTableName]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ ORDER BY insert_date ASC", _futureActionsTableName]];
         
         NSMutableArray *actions = [[NSMutableArray alloc] init];
         while ([result next])
@@ -1137,7 +1137,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
         [self storeFutureActions:actions];
     }
     
-    FMResultSet *messagesHaveSeqInOutResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"PRAGMA table_info(%@)", _messagesTableName]];
+    TGFMResultSet *messagesHaveSeqInOutResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"PRAGMA table_info(%@)", _messagesTableName]];
     bool messagesHaveSeqInOut = false;
     while ([messagesHaveSeqInOutResult next])
     {
@@ -1215,7 +1215,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
 
 - (void)initDatabase
 {
-    _database = [FMDatabase databaseWithPath:_databasePath];
+    _database = [TGFMDatabase databaseWithPath:_databasePath];
     
     if (![_database open])
     {
@@ -1239,7 +1239,7 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
     
     [self dispatchOnIndexThread:^
     {
-        _indexDatabase = [FMDatabase databaseWithPath:_indexDatabasePath];
+        _indexDatabase = [TGFMDatabase databaseWithPath:_indexDatabasePath];
         if (![_indexDatabase open])
         {
             NSLog(@"***** Error: couldn't open index database! *****");
@@ -1435,14 +1435,14 @@ static void cleanupMessage(TGDatabase *database, int mid, NSArray *attachments, 
     } synchronous:false];
 }
 
-inline static void storeUserToDatabase(TGDatabase *instance, FMDatabase *database, TGUser *user)
+inline static void storeUserToDatabase(TGDatabase *instance, TGFMDatabase *database, TGUser *user)
 {
     static NSString *queryFormat = [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@ (uid, first_name, last_name, local_first_name, local_last_name, phone_number, access_hash, sex, photo_small, photo_medium, photo_big, last_seen, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", instance.usersTableName];
     
     [database executeUpdate:queryFormat, [[NSNumber alloc] initWithInt:user.uid], user.realFirstName, user.realLastName, user.phonebookFirstName, user.phonebookLastName, user.phoneNumber, [[NSNumber alloc] initWithLongLong:user.phoneNumberHash], [[NSNumber alloc] initWithInt:user.sex], user.photoUrlSmall, user.photoUrlMedium, user.photoUrlBig, [[NSNumber alloc] initWithInt:((int)user.presence.lastSeen)], user.userName == nil ? @"" : user.userName];
 }
 
-inline static TGUser *loadUserFromDatabase(FMResultSet *result)
+inline static TGUser *loadUserFromDatabase(TGFMResultSet *result)
 {
     TGUser *user = [[TGUser alloc] init];
     
@@ -1483,7 +1483,7 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result)
     [self dispatchOnDatabaseThread:^
     {
         [_database beginTransaction];
-        FMDatabase *database = _database;
+        TGFMDatabase *database = _database;
         for (TGUser *user in userList)
         {
             storeUserToDatabase(self, database, user);
@@ -1548,7 +1548,7 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result)
         [self dispatchOnDatabaseThread:^
         {
             [_database beginTransaction];
-            FMDatabase *database = _database;
+            TGFMDatabase *database = _database;
             for (TGUser *user in usersToStore)
             {
                 storeUserToDatabase(self, database, user);
@@ -1610,7 +1610,7 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result)
     {
         [self dispatchOnDatabaseThread:^
         {
-             FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE uid=?", _usersTableName], [[NSNumber alloc] initWithInt:uid]];
+             TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE uid=?", _usersTableName], [[NSNumber alloc] initWithInt:uid]];
              if ([result next])
              {
                  user = loadUserFromDatabase(result);
@@ -1733,7 +1733,7 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result)
             
             for (std::vector<int>::const_iterator it = unknownUsers.begin(); it != unknownUsers.end(); it++)
             {
-                FMResultSet *result = [_database executeQuery:queryFormat, [[NSNumber alloc] initWithInt:*it]];
+                TGFMResultSet *result = [_database executeQuery:queryFormat, [[NSNumber alloc] initWithInt:*it]];
                 if ([result next])
                 {
                     TGUser *user = loadUserFromDatabase(result);
@@ -1810,7 +1810,7 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result)
             
             for (std::vector<int>::const_iterator it = unknownUsers.begin(); it != unknownUsers.end(); it++)
             {   
-                FMResultSet *result = [_database executeQuery:queryFormat, [[NSNumber alloc] initWithInt:*it]];
+                TGFMResultSet *result = [_database executeQuery:queryFormat, [[NSNumber alloc] initWithInt:*it]];
                 if ([result next])
                 {
                     TGUser *user = loadUserFromDatabase(result);
@@ -1878,7 +1878,7 @@ inline static TGUser *loadUserFromDatabase(FMResultSet *result)
         
         [self dispatchOnDatabaseThread:^
         {
-            FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT link FROM %@ WHERE pid=?", _userLinksTableName], [[NSNumber alloc] initWithInt:uid]];
+            TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT link FROM %@ WHERE pid=?", _userLinksTableName], [[NSNumber alloc] initWithInt:uid]];
             if ([result next])
             {
                 blockLink = [result intForColumn:@"link"];
@@ -1977,7 +1977,7 @@ static inline void storeConversationToDatabaseIfNotExists(TGDatabase *database, 
     [database.database executeUpdate:queryFormat, [[NSNumber alloc] initWithLongLong:conversation.conversationId], [[NSNumber alloc] initWithInt:conversation.date], [[NSNumber alloc] initWithInt:conversation.fromUid], conversation.text, conversation.media == nil ? nil :  [TGMessage serializeMediaAttachments:false attachments:conversation.media], [[NSNumber alloc] initWithInt:conversation.unreadCount], [[NSNumber alloc] initWithInt:flags], conversation.chatTitle, !conversation.isChat ? nil : [conversation serializeChatPhoto], !conversation.isChat ? nil : [conversation.chatParticipants serializedData], [[NSNumber alloc] initWithInt:conversation.chatParticipantCount], [[NSNumber alloc] initWithInt:conversation.chatVersion]];
 }
 
-static inline TGConversation *loadConversationFromDatabase(FMResultSet *result)
+static inline TGConversation *loadConversationFromDatabase(TGFMResultSet *result)
 {
     TGConversation *conversation = [[TGConversation alloc] init];
     
@@ -2053,7 +2053,7 @@ static inline TGConversation *loadConversationFromDatabase(FMResultSet *result)
     {
         NSMutableArray *uidsArray = [[NSMutableArray alloc] init];
         std::set<int> uidsSet;
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ ORDER BY date DESC LIMIT 20", _conversationListTableName]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ ORDER BY date DESC LIMIT 20", _conversationListTableName]];
         NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:20];
         while ([result next])
         {
@@ -2109,7 +2109,7 @@ static inline TGConversation *loadConversationFromDatabase(FMResultSet *result)
         
         NSMutableArray *array = [[NSMutableArray alloc] init];
         
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE date<=? ORDER BY date DESC LIMIT ?", _conversationListTableName], [[NSNumber alloc] initWithInt:date], [[NSNumber alloc] initWithInt:limit]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE date<=? ORDER BY date DESC LIMIT ?", _conversationListTableName], [[NSNumber alloc] initWithInt:date], [[NSNumber alloc] initWithInt:limit]];
         while ([result next])
         {
             TGConversation *conversation = loadConversationFromDatabase(result);
@@ -2150,7 +2150,7 @@ static inline TGConversation *loadConversationFromDatabase(FMResultSet *result)
          
          NSMutableArray *array = [[NSMutableArray alloc] init];
          
-         FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE date<=? ORDER BY date DESC LIMIT ?", _broadcastConversationListTableName], [[NSNumber alloc] initWithInt:date], [[NSNumber alloc] initWithInt:limit]];
+         TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE date<=? ORDER BY date DESC LIMIT ?", _broadcastConversationListTableName], [[NSNumber alloc] initWithInt:date], [[NSNumber alloc] initWithInt:limit]];
          while ([result next])
          {
              TGConversation *conversation = loadConversationFromDatabase(result);
@@ -2182,7 +2182,7 @@ static inline TGConversation *loadConversationFromDatabase(FMResultSet *result)
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT cid FROM %@ ORDER BY date ASC", _conversationListTableName]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT cid FROM %@ ORDER BY date ASC", _conversationListTableName]];
         
         NSString *messageQuery = [[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=? AND mid<%d LIMIT 1", _messagesTableName, TGMessageLocalMidBaseline];
         
@@ -2191,7 +2191,7 @@ static inline TGConversation *loadConversationFromDatabase(FMResultSet *result)
         while ([result next])
         {
             int64_t conversationId = [result intForColumnIndex:cidIndex];
-            FMResultSet *messageResult = [_database executeQuery:messageQuery, [[NSNumber alloc] initWithLongLong:conversationId]];
+            TGFMResultSet *messageResult = [_database executeQuery:messageQuery, [[NSNumber alloc] initWithLongLong:conversationId]];
             if ([messageResult next])
             {
                 offset++;
@@ -2213,7 +2213,7 @@ static inline TGConversation *loadConversationFromDatabase(FMResultSet *result)
             value = it->second;
         else
         {
-            FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid FROM %@ WHERE cid=?", _broadcastConversationListTableName], @(conversationId)];
+            TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid FROM %@ WHERE cid=?", _broadcastConversationListTableName], @(conversationId)];
             if ([result next])
                 value = true;
             
@@ -2237,7 +2237,7 @@ static inline TGConversation *loadConversationFromDatabase(FMResultSet *result)
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=?", [self _listTableNameForConversationId:conversationId]], [[NSNumber alloc] initWithLongLong:conversationId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=?", [self _listTableNameForConversationId:conversationId]], [[NSNumber alloc] initWithLongLong:conversationId]];
         
         if ([result next])
         {
@@ -2297,7 +2297,7 @@ static inline TGConversation *loadConversationFromDatabase(FMResultSet *result)
         
         [self dispatchOnDatabaseThread:^
         {
-            FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT cid FROM %@ WHERE cid=?", [self _listTableNameForConversationId:conversationId]], [[NSNumber alloc] initWithLongLong:conversationId]];
+            TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT cid FROM %@ WHERE cid=?", [self _listTableNameForConversationId:conversationId]], [[NSNumber alloc] initWithLongLong:conversationId]];
             
             if ([result next])
             {
@@ -2404,11 +2404,11 @@ static inline TGConversation *loadConversationFromDatabase(FMResultSet *result)
         
         NSNumber *nConversationId = [[NSNumber alloc] initWithLongLong:conversationId];
         
-        FMResultSet *deliveryErrorResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=? AND dstate=? LIMIT 1", _outgoingMessagesTableName], nConversationId, [[NSNumber alloc] initWithInt:TGMessageDeliveryStateFailed]];
+        TGFMResultSet *deliveryErrorResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=? AND dstate=? LIMIT 1", _outgoingMessagesTableName], nConversationId, [[NSNumber alloc] initWithInt:TGMessageDeliveryStateFailed]];
         bool hasFailed = [deliveryErrorResult next];
         deliveryErrorResult = nil;
         
-        FMResultSet *messageResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=? ORDER BY date DESC LIMIT ?", _messagesTableName], nConversationId, [[NSNumber alloc] initWithInt:hasFailed ? 4 : 1]];
+        TGFMResultSet *messageResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=? ORDER BY date DESC LIMIT ?", _messagesTableName], nConversationId, [[NSNumber alloc] initWithInt:hasFailed ? 4 : 1]];
         
         if ([messageResult next])
         {
@@ -2532,7 +2532,7 @@ bool searchDialogsResultComparator(const std::pair<id, int> &obj1, const std::pa
         {
             NSString *cleanQuery = [[query stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] lowercaseString];
             
-            FMResultSet *listResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ ORDER BY DATE DESC LIMIT 256", _conversationListTableName]];
+            TGFMResultSet *listResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ ORDER BY DATE DESC LIMIT 256", _conversationListTableName]];
             
             int cidIndex = [listResult columnIndexForName:@"cid"];
             int dateIndex = [listResult columnIndexForName:@"date"];
@@ -3143,7 +3143,7 @@ static NSMutableDictionary *transliterationPartsCache()
         NSMutableArray *mids = [[NSMutableArray alloc] init];
         
         CFAbsoluteTime searchStartTime = CFAbsoluteTimeGetCurrent();
-        FMResultSet *result = [_indexDatabase executeQuery:[NSString stringWithFormat:@"SELECT docid FROM %@ WHERE text MATCH ? ORDER BY docid DESC", _messageIndexTableName], cleanQuery];
+        TGFMResultSet *result = [_indexDatabase executeQuery:[NSString stringWithFormat:@"SELECT docid FROM %@ WHERE text MATCH ? ORDER BY docid DESC", _messageIndexTableName], cleanQuery];
         int docidIndex = [result columnIndexForName:@"docid"];
         while ([result next])
         {
@@ -3190,7 +3190,7 @@ static NSMutableDictionary *transliterationPartsCache()
                     }
                     
                     NSString *messagesQueryFormat = [[NSString alloc] initWithFormat:@"SELECT mid, cid, message, media, date, from_id, to_id, outgoing, dstate, unread FROM %@ WHERE mid IN (%@)", _messagesTableName, rangeString];
-                    FMResultSet *result = [_database executeQuery:messagesQueryFormat];
+                    TGFMResultSet *result = [_database executeQuery:messagesQueryFormat];
                     
                     int midIndex = [result columnIndexForName:@"mid"];
                     int cidIndex = [result columnIndexForName:@"cid"];
@@ -3339,7 +3339,7 @@ static NSMutableDictionary *transliterationPartsCache()
     {
         NSString *updateDeliveryStateFormat = [[NSString alloc] initWithFormat:@"UPDATE OR IGNORE %@ SET dstate=%d WHERE mid=?", _messagesTableName, TGMessageDeliveryStateFailed];
         
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE dstate=%d", _outgoingMessagesTableName, TGMessageDeliveryStatePending]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE dstate=%d", _outgoingMessagesTableName, TGMessageDeliveryStatePending]];
         int midIndex = [result columnIndexForName:@"mid"];
         int cidIndex = [result columnIndexForName:@"cid"];
         
@@ -3462,7 +3462,7 @@ static NSMutableDictionary *transliterationPartsCache()
         
         NSData *value = nil;
         
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE key=%d", _serviceTableName, _servicePtsKey]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE key=%d", _serviceTableName, _servicePtsKey]];
         if ([result next])
         {
             value = [result dataForColumn:@"value"];
@@ -3568,7 +3568,7 @@ static NSMutableDictionary *transliterationPartsCache()
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:murMurHash32(key)]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:murMurHash32(key)]];
         if ([result next])
         {
             NSData *value = [result dataForColumn:@"value"];
@@ -3591,7 +3591,7 @@ static NSMutableDictionary *transliterationPartsCache()
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:murMurHash32(key)]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:murMurHash32(key)]];
         if ([result next])
         {
             blockResult = [result dataForColumn:@"value"];
@@ -3627,7 +3627,7 @@ static NSMutableDictionary *transliterationPartsCache()
     {
         std::vector<int> uids;
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT uid FROM %@", _contactListTableName]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT uid FROM %@", _contactListTableName]];
         int uidIndex = [result columnIndexForName:@"uid"];
         while ([result next])
         {
@@ -3676,7 +3676,7 @@ static NSMutableDictionary *transliterationPartsCache()
     [self dispatchOnDatabaseThread:^
     {
         std::vector<int> uids;
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT uid FROM %@ LIMIT 1", _contactListTableName]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT uid FROM %@ LIMIT 1", _contactListTableName]];
         if ([result next])
         {
             haveContacts = true;
@@ -3706,7 +3706,7 @@ static NSMutableDictionary *transliterationPartsCache()
     __block bool isRemoteContact = false;
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT uid FROM %@ WHERE uid=?", _contactListTableName], [[NSNumber alloc] initWithInt:uid]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT uid FROM %@ WHERE uid=?", _contactListTableName], [[NSNumber alloc] initWithInt:uid]];
         if ([result next])
         {
             isRemoteContact = true;
@@ -3961,7 +3961,7 @@ static NSMutableDictionary *transliterationPartsCache()
     return array;
 }
 
-static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result, int64_t conversationId, int indexMid, int indexMessage, int indexMedia, int indexFromId, int indexToId, int indexOutgoing, int indexUnread, int indexDeliveryState, int indexDate, int indexLifetime, int indexFlags, int indexSeqIn, int indexSeqOut, int indexContentProperties)
+static inline TGMessage *loadMessageFromQueryResult(TGFMResultSet *result, int64_t conversationId, int indexMid, int indexMessage, int indexMedia, int indexFromId, int indexToId, int indexOutgoing, int indexUnread, int indexDeliveryState, int indexDate, int indexLifetime, int indexFlags, int indexSeqIn, int indexSeqOut, int indexContentProperties)
 {
     TGMessage *message = [[TGMessage alloc] init];
     
@@ -3989,7 +3989,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result, int64_t
     return message;
 }
 
-static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
+static inline TGMessage *loadMessageFromQueryResult(TGFMResultSet *result)
 {
     TGMessage *message = [[TGMessage alloc] init];
     
@@ -4020,7 +4020,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE mid=?", _conversationMediaTableName], [[NSNumber alloc] initWithInt:mid]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE mid=?", _conversationMediaTableName], [[NSNumber alloc] initWithInt:mid]];
         
         int dateIndex = [result columnIndexForName:@"date"];
         int midIndex = [result columnIndexForName:@"mid"];
@@ -4042,7 +4042,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE mid=?", _messagesTableName], [[NSNumber alloc] initWithInt:mid]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE mid=?", _messagesTableName], [[NSNumber alloc] initWithInt:mid]];
         if ([result next])
             message = loadMessageFromQueryResult(result);
     } synchronous:true];
@@ -4060,7 +4060,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         
         NSMutableArray *messages = [[NSMutableArray alloc] init];
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE unread=? ORDER BY date ASC LIMIT 1", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE unread=? ORDER BY date ASC LIMIT 1", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
         
         int indexMid = [result columnIndexForName:@"mid"];
         int indexMessage = [result columnIndexForName:@"message"];
@@ -4235,7 +4235,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         
         if (atMessageId != 0)
         {
-            FMResultSet *selectedMessageDateResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT date FROM %@ WHERE mid=?", _messagesTableName], [[NSNumber alloc] initWithInt:atMessageId]];
+            TGFMResultSet *selectedMessageDateResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT date FROM %@ WHERE mid=?", _messagesTableName], [[NSNumber alloc] initWithInt:atMessageId]];
             if ([selectedMessageDateResult next])
             {
                 downLimit = 10;
@@ -4247,18 +4247,18 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         if (extraUnread)
         {
             int lastIncomingMid = 0;
-            FMResultSet *lastIncomingResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=? AND outgoing=0 ORDER BY date DESC LIMIT 1", _messagesTableName], nConversationId];
+            TGFMResultSet *lastIncomingResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=? AND outgoing=0 ORDER BY date DESC LIMIT 1", _messagesTableName], nConversationId];
             if ([lastIncomingResult next])
                 lastIncomingMid = [lastIncomingResult intForColumn:@"mid"];
             
             int lastUnreadMid = 0;
-            FMResultSet *lastUnreadResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=? AND unread!=0 AND outgoing=0 ORDER BY date DESC LIMIT 1", _messagesTableName], nConversationId];
+            TGFMResultSet *lastUnreadResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=? AND unread!=0 AND outgoing=0 ORDER BY date DESC LIMIT 1", _messagesTableName], nConversationId];
             if ([lastUnreadResult next])
                 lastUnreadMid = [lastUnreadResult intForColumn:@"mid"];
             
             if (lastUnreadMid != 0 && lastIncomingMid != 0 && lastIncomingMid == lastUnreadMid)
             {   
-                FMResultSet *dateResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MIN(date) FROM %@ WHERE cid=? AND unread!=0 AND outgoing=0", _messagesTableName], nConversationId];
+                TGFMResultSet *dateResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MIN(date) FROM %@ WHERE cid=? AND unread!=0 AND outgoing=0", _messagesTableName], nConversationId];
                 
                 int minUnreadDate = INT_MAX;
                 
@@ -4267,7 +4267,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
                 
                 if (minUnreadDate != INT_MAX)
                 {
-                    FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE cid=? AND date>=?", _messagesTableName], nConversationId, [[NSNumber alloc] initWithInt:minUnreadDate]];
+                    TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE cid=? AND date>=?", _messagesTableName], nConversationId, [[NSNumber alloc] initWithInt:minUnreadDate]];
                     int indexMid = [result columnIndexForName:@"mid"];
                     int indexMessage = [result columnIndexForName:@"message"];
                     int indexMedia = [result columnIndexForName:@"media"];
@@ -4306,7 +4306,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
             }
         }
         
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=? AND date<=? ORDER BY date DESC LIMIT ?", _messagesTableName], nConversationId, [[NSNumber alloc] initWithInt:maxDate], [[NSNumber alloc] initWithInt:limit + 1]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=? AND date<=? ORDER BY date DESC LIMIT ?", _messagesTableName], nConversationId, [[NSNumber alloc] initWithInt:maxDate], [[NSNumber alloc] initWithInt:limit + 1]];
         
         int indexMid = [result columnIndexForName:@"mid"];
         int indexMessage = [result columnIndexForName:@"message"];
@@ -4508,7 +4508,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
 
         NSNumber *nConversationId = [[NSNumber alloc] initWithLongLong:conversationId];
         
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=? AND date>=? ORDER BY date ASC LIMIT ?", _messagesTableName], nConversationId, [[NSNumber alloc] initWithInt:minDate], [[NSNumber alloc] initWithInt:limit + 1]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=? AND date>=? ORDER BY date ASC LIMIT ?", _messagesTableName], nConversationId, [[NSNumber alloc] initWithInt:minDate], [[NSNumber alloc] initWithInt:limit + 1]];
         
         int indexMid = [result columnIndexForName:@"mid"];
         int indexMessage = [result columnIndexForName:@"message"];
@@ -4637,10 +4637,10 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
 
         for (TGMessage *message in messages)
         {
-            FMResultSet *existingResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE mid=?", _messagesTableName], [[NSNumber alloc] initWithInt:message.mid]];
+            TGFMResultSet *existingResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE mid=?", _messagesTableName], [[NSNumber alloc] initWithInt:message.mid]];
             
-            FMResultSet *existingMediaResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE mid=?", _conversationMediaTableName], [[NSNumber alloc] initWithInt:message.mid]];
-            FMResultSet *existingOutboxResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE mid=?", _outgoingMessagesTableName], [[NSNumber alloc] initWithInt:message.mid]];
+            TGFMResultSet *existingMediaResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE mid=?", _conversationMediaTableName], [[NSNumber alloc] initWithInt:message.mid]];
+            TGFMResultSet *existingOutboxResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE mid=?", _outgoingMessagesTableName], [[NSNumber alloc] initWithInt:message.mid]];
             
             bool update = [existingResult next];
             bool updateMedia = [existingMediaResult next];
@@ -4804,7 +4804,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE local_media_id=?", _outgoingMessagesTableName], [[NSNumber alloc] initWithInt:localMediaId]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE local_media_id=?", _outgoingMessagesTableName], [[NSNumber alloc] initWithInt:localMediaId]];
         while ([result next])
         {
             int mid = [result intForColumn:@"mid"];
@@ -4833,7 +4833,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         __block int databaseResult = 0;
         [self dispatchOnDatabaseThread:^
         {
-            FMResultSet *nextLocalMidResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT * from %@ WHERE key=%d", _serviceTableName, _serviceLastMidKey]];
+            TGFMResultSet *nextLocalMidResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT * from %@ WHERE key=%d", _serviceTableName, _serviceLastMidKey]];
             if ([nextLocalMidResult next])
             {
                 NSData *value = [nextLocalMidResult dataForColumn:@"value"];
@@ -4939,7 +4939,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
                         [rangeString appendFormat:@",%lld", it->first];
                 }
                 
-                FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT random_id FROM %@ WHERE random_id IN (%@)", _randomIdsTableName, rangeString]];
+                TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT random_id FROM %@ WHERE random_id IN (%@)", _randomIdsTableName, rangeString]];
                 int randomIdIndex = [result columnIndexForName:@"random_id"];
                 while ([result next])
                 {
@@ -5015,7 +5015,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
             {
                 if (maybeLocalUnreadCount != 0)
                 {
-                    FMResultSet *alreadyThereResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT mid FROM %@ WHERE mid IN (%@)", _messagesTableName, rangeString]];
+                    TGFMResultSet *alreadyThereResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT mid FROM %@ WHERE mid IN (%@)", _messagesTableName, rangeString]];
                     int midIndex = [alreadyThereResult columnIndexForName:@"mid"];
                     
                     std::set<int> alreadyThereSet;
@@ -5050,7 +5050,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
                 }
                 else
                 {
-                    FMResultSet *countResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE mid IN (%@)", _messagesTableName, rangeString]];
+                    TGFMResultSet *countResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE mid IN (%@)", _messagesTableName, rangeString]];
                     if ([countResult next])
                     {
                         int alreadyThere = [countResult intForColumn:@"COUNT(*)"];
@@ -5162,7 +5162,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         }
         else if (conversationId < 0 && conversation == nil)
         {
-            FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid FROM %@ WHERE cid=?", [self _listTableNameForConversationId:conversationId]], [[NSNumber alloc] initWithLongLong:conversationId]];
+            TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid FROM %@ WHERE cid=?", [self _listTableNameForConversationId:conversationId]], [[NSNumber alloc] initWithLongLong:conversationId]];
             if (![result next])
             {
                 unreadCount = 0;
@@ -5229,7 +5229,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ where tmp_id=?", _temporaryMessageIdsTableName], [[NSNumber alloc] initWithLongLong:tempId]];
+        TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ where tmp_id=?", _temporaryMessageIdsTableName], [[NSNumber alloc] initWithLongLong:tempId]];
         if ([resultSet next])
         {
             messageId = [resultSet intForColumn:@"mid"];
@@ -5245,7 +5245,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
     {
         std::vector<std::pair<int64_t, int> > result;
         
-        FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT tmp_id, mid FROM %@ where mid >= %d", _temporaryMessageIdsTableName, TGMessageLocalMidBaseline]];
+        TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT tmp_id, mid FROM %@ where mid >= %d", _temporaryMessageIdsTableName, TGMessageLocalMidBaseline]];
         int tmpIdIndex = [resultSet columnIndexForName:@"tmp_id"];
         int midIndex = [resultSet columnIndexForName:@"mid"];
         
@@ -5315,7 +5315,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
                     [tempIdsString appendFormat:@"%lld", tempId];
             }
             
-            FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT tmp_id, mid FROM %@ where tmp_id IN (%@)", _temporaryMessageIdsTableName, tempIdsString]];
+            TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT tmp_id, mid FROM %@ where tmp_id IN (%@)", _temporaryMessageIdsTableName, tempIdsString]];
             
             int tmpIdIndex = [resultSet columnIndexForName:@"tmp_id"];
             int midIndex = [resultSet columnIndexForName:@"mid"];
@@ -5336,7 +5336,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ where random_id=?", _randomIdsTableName], [[NSNumber alloc] initWithLongLong:randomId]];
+        TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ where random_id=?", _randomIdsTableName], [[NSNumber alloc] initWithLongLong:randomId]];
         if ([resultSet next])
         {
             messageId = (int32_t)[resultSet intForColumn:@"mid"];
@@ -5352,7 +5352,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT random_id FROM %@ where mid=?", _randomIdsTableName], [[NSNumber alloc] initWithInt:messageId]];
+        TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT random_id FROM %@ where mid=?", _randomIdsTableName], [[NSNumber alloc] initWithInt:messageId]];
         if ([resultSet next])
         {
             randomId = (int64_t)[resultSet longLongIntForColumn:@"random_id"];
@@ -5385,7 +5385,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
                     [randomIdsString appendFormat:@"%" PRId64 "", randomId];
             }
             
-            FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT random_id, mid FROM %@ where random_id IN (%@)", _randomIdsTableName, randomIdsString]];
+            TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT random_id, mid FROM %@ where random_id IN (%@)", _randomIdsTableName, randomIdsString]];
             
             int midIndex = [resultSet columnIndexForName:@"mid"];
             int randomIdIndex = [resultSet columnIndexForName:@"random_id"];
@@ -5423,7 +5423,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
                     [midsString appendFormat:@"%d", mid];
             }
             
-            FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT random_id, mid FROM %@ where mid IN (%@)", _randomIdsTableName, midsString]];
+            TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT random_id, mid FROM %@ where mid IN (%@)", _randomIdsTableName, midsString]];
             
             int midIndex = [resultSet columnIndexForName:@"mid"];
             int randomIdIndex = [resultSet columnIndexForName:@"random_id"];
@@ -5444,7 +5444,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=?", _messagesTableName], @(conversationId)];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=?", _messagesTableName], @(conversationId)];
         int midIndex = [result columnIndexForName:@"mid"];
         while ([result next])
         {
@@ -5462,7 +5462,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
     {
         NSMutableArray *changedMessageIds = [[NSMutableArray alloc] init];
         
-         FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE mid=? LIMIT 1", _messagesTableName], [[NSNumber alloc] initWithInt:mid]];
+         TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE mid=? LIMIT 1", _messagesTableName], [[NSNumber alloc] initWithInt:mid]];
          if ([result next])
          {
              int64_t isUnread = [result longLongIntForColumn:@"unread"];
@@ -5727,7 +5727,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
             [midsString appendFormat:@"%d", it.first];
         }
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid, cid FROM %@ WHERE mid IN (%@)", _messagesTableName, midsString]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid, cid FROM %@ WHERE mid IN (%@)", _messagesTableName, midsString]];
         int midIndex = [result columnIndexForName:@"mid"];
         int cidIndex = [result columnIndexForName:@"cid"];
         
@@ -5768,7 +5768,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         
         for (NSNumber *nMid in mids)
         {
-            FMResultSet *messageResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE mid=? LIMIT 1", _messagesTableName], nMid];
+            TGFMResultSet *messageResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE mid=? LIMIT 1", _messagesTableName], nMid];
             
             bool found = false;
             int64_t cid = 0;
@@ -5813,7 +5813,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
             }
             else
             {
-                FMResultSet *mediaResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid, media FROM %@ WHERE mid=? LIMIT 1", _conversationMediaTableName], nMid];
+                TGFMResultSet *mediaResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid, media FROM %@ WHERE mid=? LIMIT 1", _conversationMediaTableName], nMid];
                 
                 if ([mediaResult next])
                 {
@@ -5934,7 +5934,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
 {
     [self dispatchOnDatabaseThread:^
     {   
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT mid, media FROM %@ WHERE cid=? AND media NOT NULL", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT mid, media FROM %@ WHERE cid=? AND media NOT NULL", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
         int midIndex = [result columnIndexForName:@"mid"];
         int mediaIndex = [result columnIndexForName:@"media"];
         while ([result next])
@@ -5961,7 +5961,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         }
         
         NSMutableArray *midsInConversation = [[NSMutableArray alloc] init];
-        FMResultSet *midsResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT mid FROM %@ WHERE cid=?", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
+        TGFMResultSet *midsResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT mid FROM %@ WHERE cid=?", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
         int midsResultMidIndex = [midsResult columnIndexForName:@"mid"];
         while ([midsResult next])
         {
@@ -6102,7 +6102,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
                 [rangeString appendFormat:@"%d", [[mids objectAtIndex:i] intValue]];
             }
             
-            FMResultSet *unreadResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid, outgoing FROM %@ WHERE mid IN (%@) AND unread IS NOT NULL", _messagesTableName, rangeString]];
+            TGFMResultSet *unreadResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid, outgoing FROM %@ WHERE mid IN (%@) AND unread IS NOT NULL", _messagesTableName, rangeString]];
             
             int cidIndex = [unreadResult columnIndexForName:@"cid"];
             int outgoingIndex = [unreadResult columnIndexForName:@"outgoing"];
@@ -6158,7 +6158,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         
         //TGLog(@"reading from %d", maxDate);
         
-        /*FMResultSet *testResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE cid=? ORDER BY date DESC LIMIT 8", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
+        /*TGFMResultSet *testResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE cid=? ORDER BY date DESC LIMIT 8", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
         while ([testResult next])
         {
             TGLog(@"  %d: %d", [testResult intForColumn:@"mid"], [testResult intForColumn:@"date"]);
@@ -6178,7 +6178,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         {
             [midsString deleteCharactersInRange:NSMakeRange(0, midsString.length)];
             
-            FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE cid=? AND date<=? ORDER BY date DESC LIMIT ?, ?", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:startingDate], [[NSNumber alloc] initWithInt:startingDateLimit], [[NSNumber alloc] initWithInt:firstLoop ? 8 : 64]];
+            TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE cid=? AND date<=? ORDER BY date DESC LIMIT ?, ?", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:startingDate], [[NSNumber alloc] initWithInt:startingDateLimit], [[NSNumber alloc] initWithInt:firstLoop ? 8 : 64]];
             
             int midIndex = [result columnIndexForName:@"mid"];
             int messageIndex = [result columnIndexForName:@"message"];
@@ -6302,7 +6302,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         std::map<int64_t, NSString *> stateMap;
         
         [_database setSoftShouldCacheStatements:false];
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid IN (%@)", _conversationsStatesTableName, idsString]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid IN (%@)", _conversationsStatesTableName, idsString]];
         [_database setSoftShouldCacheStatements:true];
         while ([result next])
         {
@@ -6343,7 +6343,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
     [self dispatchOnDatabaseThread:^
     {
         TGLog(@"(loading conversation state sync)");
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=?", _conversationsStatesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE cid=?", _conversationsStatesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
         if ([result next])
         {
             NSString *messageText = [result stringForColumn:@"message_text"];
@@ -6396,7 +6396,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         
         //[self explainQuery:[[NSString alloc] initWithFormat:@"SELECT date, mid, localMid FROM %@ WHERE unread=%lld", _messagesTableName, conversationId]];
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT date, mid, flags, localMid%s FROM %@ WHERE unread=?", conversationId <= INT_MIN ? ", media" : "", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT date, mid, flags, localMid%s FROM %@ WHERE unread=?", conversationId <= INT_MIN ? ", media" : "", _messagesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
         
         std::set<int> unreadMids;
         std::vector<std::pair<int, int> > midWithLifetime;
@@ -6563,7 +6563,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         {
             if (actionQueueMid == 0)
             {
-                FMResultSet *anyResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=? ORDER BY date DESC LIMIT 1", _messagesTableName], @(conversationId)];
+                TGFMResultSet *anyResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=? ORDER BY date DESC LIMIT 1", _messagesTableName], @(conversationId)];
                 if ([anyResult next])
                 {
                     int mid = [anyResult intForColumn:@"mid"];
@@ -6640,7 +6640,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
             
             int recordCount = 0;
             
-            FMResultSet *result = nil;
+            TGFMResultSet *result = nil;
             if (lastProcessedMid == INT_MAX)
                 result = [_database executeQuery:firstQueryFormat, nConversationId];
             else
@@ -6733,7 +6733,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
         
         if (actionQueueMid == 0)
         {
-            FMResultSet *lastMidResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT mid FROM %@ WHERE cid=? AND mid<%d ORDER BY mid DESC LIMIT 1", _messagesTableName, TGMessageLocalMidBaseline], nConversationId];
+            TGFMResultSet *lastMidResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT mid FROM %@ WHERE cid=? AND mid<%d ORDER BY mid DESC LIMIT 1", _messagesTableName, TGMessageLocalMidBaseline], nConversationId];
             if ([lastMidResult next])
             {
                 actionQueueMid = [lastMidResult intForColumn:@"mid"];
@@ -6831,7 +6831,7 @@ static inline TGMessage *loadMessageFromQueryResult(FMResultSet *result)
     } synchronous:false];
 }
 
-inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const &dateIndex, int const &fromIdIndex, int const &midIndex, int const &mediaIndex)
+inline TGMessage *loadMessageMediaFromQueryResult(TGFMResultSet *result, int const &dateIndex, int const &fromIdIndex, int const &midIndex, int const &mediaIndex)
 {
     int mid = [result intForColumnIndex:midIndex];
     int date = [result intForColumnIndex:dateIndex];
@@ -6853,7 +6853,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *dateResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT date FROM %@ WHERE cid=? AND mid=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:messageId]];
+        TGFMResultSet *dateResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT date FROM %@ WHERE cid=? AND mid=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:messageId]];
         if ([dateResult next])
         {
             int maxDate = [dateResult intForColumn:@"date"];
@@ -6861,13 +6861,13 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
             int positionInConversation = 0;
             int totalCount = 0;
             
-            FMResultSet *uniqueDateResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=? AND date<?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:maxDate]];
+            TGFMResultSet *uniqueDateResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=? AND date<?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:maxDate]];
             
             if ([uniqueDateResult next])
             {
                 positionInConversation = [uniqueDateResult intForColumn:@"COUNT(*)"];
                 
-                FMResultSet *equalDateResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=? AND date=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:maxDate]];
+                TGFMResultSet *equalDateResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=? AND date=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:maxDate]];
                 
                 while ([equalDateResult next])
                 {
@@ -6887,7 +6887,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
                     }
                 }
                 
-                FMResultSet *countResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
+                TGFMResultSet *countResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
                 if ([countResult next])
                     totalCount = [countResult intForColumn:@"COUNT(*)"];
                 
@@ -6917,11 +6917,11 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
             return;
         }
         
-        FMResultSet *dateResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT date FROM %@ WHERE cid=? AND mid=? LIMIT 1", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:atMessageId]];
+        TGFMResultSet *dateResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT date FROM %@ WHERE cid=? AND mid=? LIMIT 1", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:atMessageId]];
         if ([dateResult next])
         {
             int maxDate = [dateResult intForColumn:@"date"];
-            FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT date, from_id, mid, media FROM %@ WHERE cid=? AND date>=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:maxDate]];
+            TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT date, from_id, mid, media FROM %@ WHERE cid=? AND date>=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:maxDate]];
             
             int dateIndex = [result columnIndexForName:@"date"];
             int midIndex = [result columnIndexForName:@"mid"];
@@ -6959,7 +6959,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
             {
                 if (conversationId <= INT_MIN)
                 {
-                    FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=?", _conversationMediaTableName], @(conversationId)];
+                    TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=?", _conversationMediaTableName], @(conversationId)];
                     int localCount = 0;
                     while ([result next])
                     {
@@ -6972,7 +6972,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
                 }
                 else
                 {
-                    FMResultSet *countResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
+                    TGFMResultSet *countResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
                     if ([countResult next])
                         *count = [countResult intForColumn:@"COUNT(*)"];
                 }
@@ -6990,7 +6990,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT date, mid, from_id, media FROM %@ WHERE cid=? AND date<=? ORDER BY date DESC LIMIT ?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:maxDate], [[NSNumber alloc] initWithInt:limit]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT date, mid, from_id, media FROM %@ WHERE cid=? AND date<=? ORDER BY date DESC LIMIT ?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId], [[NSNumber alloc] initWithInt:maxDate], [[NSNumber alloc] initWithInt:limit]];
         
         int dateIndex = [result columnIndexForName:@"date"];
         int midIndex = [result columnIndexForName:@"mid"];
@@ -7066,7 +7066,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
         {
             if (conversationId <= INT_MIN)
             {
-                FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=?", _conversationMediaTableName], @(conversationId)];
+                TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE cid=?", _conversationMediaTableName], @(conversationId)];
                 int localCount = 0;
                 while ([result next])
                 {
@@ -7079,7 +7079,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
             }
             else
             {
-                FMResultSet *countResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
+                TGFMResultSet *countResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=?", _conversationMediaTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
                 if ([countResult next])
                     *count = [countResult intForColumn:@"COUNT(*)"];
             }
@@ -7138,7 +7138,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
         if (completion)
         {
             int count = 0;
-            FMResultSet *countResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=?", _conversationMediaTableName], nConversationId];
+            TGFMResultSet *countResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=?", _conversationMediaTableName], nConversationId];
             if ([countResult next])
                 count = [countResult intForColumn:@"COUNT(*)"];
             
@@ -7151,7 +7151,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MIN(mid) FROM %@ WHERE cid=?", _conversationMediaTableName], @(conversationId)];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MIN(mid) FROM %@ WHERE cid=?", _conversationMediaTableName], @(conversationId)];
         if ([result next])
         {
             int32_t messageId = [result intForColumn:@"MIN(mid)"];
@@ -7180,7 +7180,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=?", _conversationMediaTableName], @(conversationId)];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT COUNT(*) FROM %@ WHERE cid=?", _conversationMediaTableName], @(conversationId)];
         if ([result next])
             mediaCount = [result intForColumn:@"COUNT(*)"];
     } synchronous:true];
@@ -7237,7 +7237,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
         {
             NSMutableArray *array = [[NSMutableArray alloc] init];
             
-            FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE action_type=%d", _actionQueueTableName, [nActionType intValue]]];
+            TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT * FROM %@ WHERE action_type=%d", _actionQueueTableName, [nActionType intValue]]];
             int actionSubjectIndex = [result columnIndexForName:@"action_subject"];
             int arg0Index = [result columnIndexForName:@"arg0"];
             int arg1Index = [result columnIndexForName:@"arg1"];
@@ -7278,7 +7278,7 @@ inline TGMessage *loadMessageMediaFromQueryResult(FMResultSet *result, int const
     } synchronous:false];
 }
 
-static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *result)
+static inline TGFutureAction *loadFutureActionFromQueryResult(TGFMResultSet *result)
 {
     int idIndex = [result columnIndexForName:@"id"];
     int typeIndex = [result columnIndexForName:@"type"];
@@ -7310,7 +7310,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE id=? AND type=? AND random_id=?", _futureActionsTableName], [[NSNumber alloc] initWithLongLong:uniqueId], [[NSNumber alloc] initWithInt:type], [[NSNumber alloc] initWithInt:randomId]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE id=? AND type=? AND random_id=?", _futureActionsTableName], [[NSNumber alloc] initWithLongLong:uniqueId], [[NSNumber alloc] initWithInt:type], [[NSNumber alloc] initWithInt:randomId]];
         if ([result next])
         {
             TGFutureAction *action = loadFutureActionFromQueryResult(result);
@@ -7344,7 +7344,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [self dispatchOnDatabaseThread:^
     {   
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT id, type, data, random_id FROM %@ WHERE type NOT IN (%d, %d, %d, %d) ORDER BY sort_key ASC LIMIT 1", _futureActionsTableName, TGUploadAvatarFutureActionType, TGDeleteProfilePhotoFutureActionType, TGRemoveContactFutureActionType, TGExportContactFutureActionType]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT id, type, data, random_id FROM %@ WHERE type NOT IN (%d, %d, %d, %d) ORDER BY sort_key ASC LIMIT 1", _futureActionsTableName, TGUploadAvatarFutureActionType, TGDeleteProfilePhotoFutureActionType, TGRemoveContactFutureActionType, TGExportContactFutureActionType]];
         
         if ([result next])
         {
@@ -7364,7 +7364,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT id, type, data, random_id FROM %@ WHERE type=? ORDER BY sort_key ASC", _futureActionsTableName], [[NSNumber alloc] initWithInt:type]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT id, type, data, random_id FROM %@ WHERE type=? ORDER BY sort_key ASC", _futureActionsTableName], [[NSNumber alloc] initWithInt:type]];
         
         while ([result next])
         {
@@ -7384,7 +7384,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT id, type, data, random_id FROM %@ WHERE id=? AND type=?", _futureActionsTableName], [[NSNumber alloc] initWithLongLong:uniqueId], [[NSNumber alloc] initWithInt:type]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT id, type, data, random_id FROM %@ WHERE id=? AND type=?", _futureActionsTableName], [[NSNumber alloc] initWithLongLong:uniqueId], [[NSNumber alloc] initWithInt:type]];
         if ([result next])
         {
             action = loadFutureActionFromQueryResult(result);
@@ -7401,7 +7401,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT last_mid FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT last_mid FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
         if ([result next])
         {
             minMid = [result intForColumn:@"last_mid"];
@@ -7417,7 +7417,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT last_media FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT last_media FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
         if ([result next])
         {
             minMediaMid = [result intForColumn:@"last_media"];
@@ -7437,7 +7437,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT notification_type, mute, preview_text FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT notification_type, mute, preview_text FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
         if ([result next])
         {
             foundSoundId = [result intForColumn:@"notification_type"];
@@ -7703,7 +7703,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT pid FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT pid FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
         if ([result next])
         {
             [_database executeUpdate:[NSString stringWithFormat:@"UPDATE %@ SET last_mid=%d WHERE pid=%lld", _peerPropertiesTableName, minMid, peerId]];
@@ -7719,7 +7719,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT pid FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT pid FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
         if ([result next])
         {
             [_database executeUpdate:[NSString stringWithFormat:@"UPDATE %@ SET last_media=%d WHERE pid=%lld", _peerPropertiesTableName, minMediaMid, peerId]];
@@ -7735,7 +7735,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT pid, notification_type, mute, preview_text FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT pid, notification_type, mute, preview_text FROM %@ WHERE pid=%lld", _peerPropertiesTableName, peerId]];
         if ([result next])
         {
             int currentSoundId = [result intForColumn:@"notification_type"];
@@ -7772,7 +7772,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT custom_properties FROM %@ WHERE pid=?", _peerPropertiesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT custom_properties FROM %@ WHERE pid=?", _peerPropertiesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
         
         std::map<int, NSData *> tmpDict;
         bool update = false;
@@ -7849,7 +7849,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT custom_properties FROM %@ WHERE pid=%lld", _peerPropertiesTableName, conversationId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT custom_properties FROM %@ WHERE pid=%lld", _peerPropertiesTableName, conversationId]];
         
         id value = nil;
         
@@ -7906,7 +7906,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT custom_properties FROM %@ WHERE pid=?", _peerPropertiesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
+        TGFMResultSet *result = [_database executeQuery:[NSString stringWithFormat:@"SELECT custom_properties FROM %@ WHERE pid=?", _peerPropertiesTableName], [[NSNumber alloc] initWithLongLong:conversationId]];
         
         if ([result next])
         {
@@ -7976,7 +7976,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 {
     NSIndexSet *indexSet = nil;
     
-    FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT holes FROM %@ WHERE peer_id = ?", _peerHistoryHolesTableName], @(peerId)];
+    TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT holes FROM %@ WHERE peer_id = ?", _peerHistoryHolesTableName], @(peerId)];
     if ([result next])
     {
         NSData *data = [result dataForColumn:@"holes"];
@@ -8002,7 +8002,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     [self dispatchOnDatabaseThread:^
     {
         //[self explainQuery:[[NSString alloc] initWithFormat:@"SELECT MIN(mid) FROM %@ WHERE cid = %" PRId64 " AND mid > %" PRId32 "", _messagesTableName, peerId, maxMessageId]];
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MIN(mid) FROM %@ WHERE cid = ? AND mid > ?", _messagesTableName], @(peerId), @(maxMessageId)];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MIN(mid) FROM %@ WHERE cid = ? AND mid > ?", _messagesTableName], @(peerId), @(maxMessageId)];
         if ([result next])
         {
             int32_t nextMessage = [result intForColumn:@"MIN(mid)"];
@@ -8174,7 +8174,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
         int64_t hash_low = 0;
         memcpy(&hash_low, md5Buffer + 8, 8);
         
-        FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE hash_high=? AND hash_low=?", _assetsTableName], [[NSNumber alloc] initWithLongLong:hash_high], [[NSNumber alloc] initWithLongLong:hash_low]];
+        TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE hash_high=? AND hash_low=?", _assetsTableName], [[NSNumber alloc] initWithLongLong:hash_high], [[NSNumber alloc] initWithLongLong:hash_low]];
         result = [resultSet next];
         resultSet = nil;
         
@@ -8188,7 +8188,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     [self dispatchOnDatabaseThread:^
     {
         NSNumber *nPeerId = [[NSNumber alloc] initWithLongLong:peerId];
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT pid FROM %@ WHERE pid=?", _blockedUsersTableName], nPeerId];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT pid FROM %@ WHERE pid=?", _blockedUsersTableName], nPeerId];
         bool currentBlocked = [result next];
         result = nil;
         
@@ -8214,7 +8214,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
         auto it = pSet->begin();
         while (it != pSet->end())
         {
-            FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT pid FROM %@ WHERE pid=?", _blockedUsersTableName], [[NSNumber alloc] initWithLongLong:*it]];
+            TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT pid FROM %@ WHERE pid=?", _blockedUsersTableName], [[NSNumber alloc] initWithLongLong:*it]];
             bool blocked = [result next];
             
             if (blocked)
@@ -8229,7 +8229,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT pid FROM %@ WHERE pid=?", _blockedUsersTableName], [[NSNumber alloc] initWithLongLong:peerId]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT pid FROM %@ WHERE pid=?", _blockedUsersTableName], [[NSNumber alloc] initWithLongLong:peerId]];
         bool blocked = [result next];
         if (completion)
             completion(blocked);
@@ -8256,7 +8256,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     {
         NSMutableArray *array = [[NSMutableArray alloc] init];
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ ORDER BY date DESC", _blockedUsersTableName]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ ORDER BY date DESC", _blockedUsersTableName]];
         int pidIndex = [result columnIndexForName:@"pid"];
         
         while ([result next])
@@ -8276,7 +8276,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT date FROM %@ WHERE pid=?", _blockedUsersTableName], [[NSNumber alloc] initWithLongLong:peerId]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT date FROM %@ WHERE pid=?", _blockedUsersTableName], [[NSNumber alloc] initWithLongLong:peerId]];
         if ([result next])
         {
             date = [result intForColumn:@"date"];
@@ -8327,7 +8327,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
         {
             NSNumber *nPhotoId = [[NSNumber alloc] initWithLongLong:imageAttachment.imageId];
             
-            FMResultSet *result = [_database executeQuery:selectFormat, nPeerId, nPhotoId];
+            TGFMResultSet *result = [_database executeQuery:selectFormat, nPeerId, nPhotoId];
             if (![result next])
             {
                 NSMutableData *data = [[NSMutableData alloc] init];
@@ -8350,7 +8350,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     {
         NSMutableArray *array = [[NSMutableArray alloc] init];
         
-        FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT data FROM %@ WHERE peer_id=?", _peerProfilePhotosTableName], [[NSNumber alloc] initWithLongLong:peerId]];
+        TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT data FROM %@ WHERE peer_id=?", _peerProfilePhotosTableName], [[NSNumber alloc] initWithLongLong:peerId]];
         
         int indexData = [resultSet columnIndexForName:@"data"];
         
@@ -8408,7 +8408,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     {
         int databaseMid = 0;
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceLatestSynchronizedMidKey]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceLatestSynchronizedMidKey]];
         if ([result next])
         {
             NSData *data = [result dataForColumn:@"value"];
@@ -8444,7 +8444,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     {
         int databaseQts = 0;
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceLatestSynchronizedQtsKey]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceLatestSynchronizedQtsKey]];
         if ([result next])
         {
             NSData *data = [result dataForColumn:@"value"];
@@ -8478,7 +8478,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceLatestSynchronizedMidKey]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceLatestSynchronizedMidKey]];
         if ([result next])
         {
             NSData *data = [result dataForColumn:@"value"];
@@ -8502,7 +8502,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceLatestSynchronizedQtsKey]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT value FROM %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceLatestSynchronizedQtsKey]];
         if ([result next])
         {
             NSData *data = [result dataForColumn:@"value"];
@@ -8548,7 +8548,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
             memcpy(&hash_low, md5Buffer + 8, 8);
         }
         
-        FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT data FROM %@ WHERE hash_high=? AND hash_low=?", _serverAssetsTableName], [[NSNumber alloc] initWithLongLong:hash_high], [[NSNumber alloc] initWithLongLong:hash_low]];
+        TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT data FROM %@ WHERE hash_high=? AND hash_low=?", _serverAssetsTableName], [[NSNumber alloc] initWithLongLong:hash_high], [[NSNumber alloc] initWithLongLong:hash_low]];
         
         if ([resultSet next])
         {
@@ -8648,7 +8648,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
         
         [self dispatchOnDatabaseThread:^
         {
-            FMResultSet *encryptedConversationIdResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE encrypted_id=?", _encryptedConversationIdsTableName], [[NSNumber alloc] initWithLongLong:encryptedConversationId]];
+            TGFMResultSet *encryptedConversationIdResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE encrypted_id=?", _encryptedConversationIdsTableName], [[NSNumber alloc] initWithLongLong:encryptedConversationId]];
             if ([encryptedConversationIdResult next])
             {
                 blockResult = [encryptedConversationIdResult longLongIntForColumn:@"cid"];
@@ -8657,7 +8657,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
             {
                 int localCount = 0;
                 
-                FMResultSet *encryptedConversationCountResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT * from %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceEncryptedConversationCount]];
+                TGFMResultSet *encryptedConversationCountResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT * from %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceEncryptedConversationCount]];
                 if ([encryptedConversationCountResult next])
                 {
                     NSData *value = [encryptedConversationCountResult dataForColumn:@"value"];
@@ -8704,7 +8704,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     {
         [self dispatchOnDatabaseThread:^
         {
-            FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT encrypted_id FROM %@ WHERE cid=? LIMIT 1", _encryptedConversationIdsTableName], [[NSNumber alloc] initWithLongLong:peerId]];
+            TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT encrypted_id FROM %@ WHERE cid=? LIMIT 1", _encryptedConversationIdsTableName], [[NSNumber alloc] initWithLongLong:peerId]];
             if ([result next])
                 encryptedConversationId = [result longLongIntForColumn:@"encrypted_id"];
         } synchronous:true];
@@ -9011,7 +9011,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
                     [rangeString appendFormat:@",%lld", *it];
             }
             
-            FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT random_id FROM %@ WHERE random_id IN (%@)", _randomIdsTableName, rangeString]];
+            TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT random_id FROM %@ WHERE random_id IN (%@)", _randomIdsTableName, rangeString]];
             int randomIdIndex = [result columnIndexForName:@"random_id"];
             while ([result next])
             {
@@ -9029,7 +9029,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE cid<=%d", _conversationListTableName, INT_MIN]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE cid<=%d", _conversationListTableName, INT_MIN]];
         int maxDate = 0;
         int64_t peerIdWithMaxDate = 0;
         
@@ -9061,7 +9061,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [TGDatabaseInstance() dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ LIMIT 1", _broadcastConversationListTableName]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ LIMIT 1", _broadcastConversationListTableName]];
         if ([result next])
             value = true;
     } synchronous:true];
@@ -9077,7 +9077,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 
         int localCount = 0;
         
-        FMResultSet *encryptedConversationCountResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT * from %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceEncryptedConversationCount]];
+        TGFMResultSet *encryptedConversationCountResult = [_database executeQuery:[NSString stringWithFormat:@"SELECT * from %@ WHERE key=?", _serviceTableName], [[NSNumber alloc] initWithInt:_serviceEncryptedConversationCount]];
         if ([encryptedConversationCountResult next])
         {
             NSData *value = [encryptedConversationCountResult dataForColumn:@"value"];
@@ -9258,7 +9258,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
         
         int currentDate = (int)(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970 + _timeDifferenceFromUTC);
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE date<=?", _selfDestructTableName], [[NSNumber alloc] initWithInt:currentDate]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid FROM %@ WHERE date<=?", _selfDestructTableName], [[NSNumber alloc] initWithInt:currentDate]];
         
         NSMutableArray *deleteMids = [[NSMutableArray alloc] init];
         
@@ -9284,7 +9284,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
             [ActionStageInstance() requestActor:@"/tg/service/synchronizeactionqueue/(global)" options:nil watcher:TGTelegraphInstance];
         }
         
-        FMResultSet *nextDateResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MIN(date) FROM %@", _selfDestructTableName]];
+        TGFMResultSet *nextDateResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MIN(date) FROM %@", _selfDestructTableName]];
         if ([nextDateResult next])
         {
             int nextDate = [nextDateResult intForColumn:@"MIN(date)"];
@@ -9325,7 +9325,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
                     [midsString appendFormat:@"%" PRId32 "", mid];
             }
             
-            FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE mid IN (%@)", _messagesTableName, midsString]];
+            TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE mid IN (%@)", _messagesTableName, midsString]];
             
             while ([resultSet next])
             {
@@ -9360,12 +9360,12 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *messageResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT localMid, cid FROM %@ WHERE mid=?", _messagesTableName], @(mid)];
+        TGFMResultSet *messageResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT localMid, cid FROM %@ WHERE mid=?", _messagesTableName], @(mid)];
         if ([messageResult next])
         {
             int messageLifetime = [messageResult intForColumn:@"localMid"];
             
-            FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT date FROM %@ WHERE mid=?", _selfDestructTableName], [[NSNumber alloc] initWithInt:mid]];
+            TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT date FROM %@ WHERE mid=?", _selfDestructTableName], [[NSNumber alloc] initWithInt:mid]];
             if ([result next])
                 countdownTime = [result intForColumn:@"date"] - messageLifetime - (kCFAbsoluteTimeIntervalSince1970 + _timeDifferenceFromUTC);
             else if (enqueueIfNotQueued)
@@ -9407,7 +9407,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
         int32_t messageId = [self messageIdForRandomId:randomId];
         if (messageId != 0)
         {
-            FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT flags FROM %@ WHERE mid=?", _secretMediaAttributesTableName], @(messageId)];
+            TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT flags FROM %@ WHERE mid=?", _secretMediaAttributesTableName], @(messageId)];
             if ([result next])
             {
                 int currentFlags = [result intForColumn:@"flags"];
@@ -9427,7 +9427,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
 {
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT flags FROM %@ WHERE mid=?", _secretMediaAttributesTableName], @(messageId)];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT flags FROM %@ WHERE mid=?", _secretMediaAttributesTableName], @(messageId)];
         if ([result next])
         {
             int currentFlags = [result intForColumn:@"flags"];
@@ -9448,7 +9448,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
     
     [self dispatchOnDatabaseThread:^
     {
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT flags FROM %@ WHERE mid=?", _secretMediaAttributesTableName], @(messageId)];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT flags FROM %@ WHERE mid=?", _secretMediaAttributesTableName], @(messageId)];
         if ([result next])
         {
             messageFlags = [result intForColumn:@"flags"];
@@ -9468,7 +9468,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
         
         std::set<int32_t> mids;
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mids FROM %@", _storedFilesTableName]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mids FROM %@", _storedFilesTableName]];
         int midsIndex = [result columnIndexForName:@"mids"];
         while ([result next])
         {
@@ -9553,7 +9553,7 @@ static inline TGFutureAction *loadFutureActionFromQueryResult(FMResultSet *resul
                     [midsString appendFormat:@"%" PRId32 "", mid];
             }
             
-            FMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE mid IN (%@)", _messagesTableName, midsString]];
+            TGFMResultSet *resultSet = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE mid IN (%@)", _messagesTableName, midsString]];
             
             while ([resultSet next])
             {
@@ -9594,7 +9594,7 @@ typedef struct {
     
     for (auto it : *records)
     {
-        FMResultSet *result = [_database executeQuery:selectQuery, @(it.mediaType), @(it.mediaId)];
+        TGFMResultSet *result = [_database executeQuery:selectQuery, @(it.mediaType), @(it.mediaId)];
         if ([result next])
         {
             NSData *midsData = [result dataForColumn:@"mids"];
@@ -9665,7 +9665,7 @@ typedef struct {
         int currentDate = (int)(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970 + _timeDifferenceFromUTC) ;
         int removeDate = currentDate - keepMediaSeconds;
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE date<=?", _mediaCacheInvalidationTableName], @(removeDate)];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE date<=?", _mediaCacheInvalidationTableName], @(removeDate)];
         
         std::vector<std::pair<int32_t, int64_t> > removeKeys;
         NSMutableArray *removeMidSets = [[NSMutableArray alloc] init];
@@ -9744,7 +9744,7 @@ typedef struct {
         if (removedMedias.count != 0)
             [ActionStageInstance() dispatchResource:@"/tg/removedMediasForMessageIds" resource:removedMids];
         
-        FMResultSet *nextDateResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MIN(date) FROM %@", _mediaCacheInvalidationTableName]];
+        TGFMResultSet *nextDateResult = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MIN(date) FROM %@", _mediaCacheInvalidationTableName]];
         if ([nextDateResult next])
         {
             int nextDate = [nextDateResult intForColumn:@"MIN(date)"];
@@ -9971,7 +9971,7 @@ typedef struct {
             int currentMid = lastMid;
             [self dispatchOnDatabaseThread:^
             {
-                FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid, media, cid FROM %@ WHERE mid < ? ORDER BY mid DESC LIMIT 512", _messagesTableName], @(lastMid)];
+                TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT mid, media, cid FROM %@ WHERE mid < ? ORDER BY mid DESC LIMIT 512", _messagesTableName], @(lastMid)];
                 int midIndex = [result columnIndexForName:@"mid"];
                 int dataIndex = [result columnIndexForName:@"media"];
                 int cidIndex = [result columnIndexForName:@"cid"];
@@ -10011,7 +10011,7 @@ typedef struct {
             int currentUid = lastUid;
             [self dispatchOnDatabaseThread:^
             {
-                FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT uid, photo_small, photo_big FROM %@ WHERE uid < ? ORDER BY uid DESC LIMIT 512", _usersTableName], @(lastUid)];
+                TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT uid, photo_small, photo_big FROM %@ WHERE uid < ? ORDER BY uid DESC LIMIT 512", _usersTableName], @(lastUid)];
                 int uidIndex = [result columnIndexForName:@"uid"];
                 int photoSmallIndex = [result columnIndexForName:@"photo_small"];
                 int photoBigIndex = [result columnIndexForName:@"photo_big"];
@@ -10045,7 +10045,7 @@ typedef struct {
             int64_t currentPeerId = lastPeerId;
             [self dispatchOnDatabaseThread:^
              {
-                 FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid, chat_photo FROM %@ WHERE cid < ? AND cid > ? ORDER BY cid DESC LIMIT 512", _conversationListTableName], @(lastPeerId), @(INT_MIN)];
+                 TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid, chat_photo FROM %@ WHERE cid < ? AND cid > ? ORDER BY cid DESC LIMIT 512", _conversationListTableName], @(lastPeerId), @(INT_MIN)];
                  int cidIndex = [result columnIndexForName:@"cid"];
                  int photoIndex = [result columnIndexForName:@"chat_photo"];
                  TGConversation *tmpConversation = [[TGConversation alloc] init];
@@ -10281,7 +10281,7 @@ typedef struct {
         [_deletionTickTimer invalidate];
         _deletionTickTimer = nil;
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ LIMIT 128", _fileDeletionTableName]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ LIMIT 128", _fileDeletionTableName]];
         NSMutableArray *deleteFiles = [[NSMutableArray alloc] init];
         while ([result next])
         {
@@ -10478,7 +10478,7 @@ typedef struct {
     [self dispatchOnDatabaseThread:^
     {
         NSMutableArray *peerIds = [[NSMutableArray alloc] init];
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid FROM %@ WHERE cid<=%d ORDER BY cid DESC", _conversationListTableName, INT_MIN]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT cid FROM %@ WHERE cid<=%d ORDER BY cid DESC", _conversationListTableName, INT_MIN]];
         int cidIndex = [result columnIndexForName:@"cid"];
         while ([result next])
         {
@@ -10497,7 +10497,7 @@ typedef struct {
         NSMutableSet *outgoingPeerIds = [[NSMutableSet alloc] init];
         NSMutableSet *incomingPeerIds = [[NSMutableSet alloc] init];
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT DISTINCT peer_id FROM %@", _secretPeerOutgoingTableName]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT DISTINCT peer_id FROM %@", _secretPeerOutgoingTableName]];
         while ([result next])
         {
             [outgoingPeerIds addObject:@([result longLongIntForColumn:@"peer_id"])];
@@ -10580,7 +10580,7 @@ typedef struct {
         NSData *data = [encoder data];
         
         [_database executeUpdate:[[NSString alloc] initWithFormat:@"INSERT INTO %@ (peer_id, seq_out, seq_in, data) VALUES (?, ?, ?, ?)", _secretPeerOutgoingTableName], @(peerId), @(blockSeqOut), @(blockSeqIn), data];
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MAX(rowid) FROM %@", _secretPeerOutgoingTableName]];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT MAX(rowid) FROM %@", _secretPeerOutgoingTableName]];
         if ([result next])
             blockActionId = [result intForColumn:@"MAX(rowid)"];
         [_database commit];
@@ -10601,7 +10601,7 @@ typedef struct {
         NSMutableArray *actions = [[NSMutableArray alloc] init];
         NSArray *resendActions = [self _dequeuePeerOutgoingResendActions:peerId];
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE peer_id=? ORDER BY action_id ASC", _secretPeerOutgoingTableName], @(peerId)];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE peer_id=? ORDER BY action_id ASC", _secretPeerOutgoingTableName], @(peerId)];
         int32_t sentSeqOut = [self currentPeerSentSeqOut:peerId];
         if ([self peerLayer:peerId] < 17)
             sentSeqOut = -1;
@@ -10643,7 +10643,7 @@ typedef struct {
 {
     NSMutableArray *actions = [[NSMutableArray alloc] init];
     
-    FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE peer_id=? ORDER BY action_id ASC", _secretPeerOutgoingResendTableName], @(peerId)];
+    TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE peer_id=? ORDER BY action_id ASC", _secretPeerOutgoingResendTableName], @(peerId)];
     PSKeyValueDecoder *decoder = [[PSKeyValueDecoder alloc] init];
     while ([result next])
     {
@@ -10686,7 +10686,7 @@ typedef struct {
     {
         NSMutableArray *actions = [[NSMutableArray alloc] init];
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE peer_id=? AND seq_out>=? AND seq_out<=? ORDER BY seq_out ASC", _secretPeerOutgoingTableName], @(peerId), @(fromSeq), @(toSeq)];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE peer_id=? AND seq_out>=? AND seq_out<=? ORDER BY seq_out ASC", _secretPeerOutgoingTableName], @(peerId), @(fromSeq), @(toSeq)];
         NSMutableSet *indices = [[NSMutableSet alloc] init];
         for (int32_t seq = fromSeq; seq <= toSeq; seq++)
         {
@@ -10771,7 +10771,7 @@ typedef struct {
     {
         NSMutableArray *actions = [[NSMutableArray alloc] init];
         
-        FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE peer_id=? ORDER BY action_id ASC", _secretPeerIncomingTableName], @(peerId)];
+        TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE peer_id=? ORDER BY action_id ASC", _secretPeerIncomingTableName], @(peerId)];
         PSKeyValueDecoder *decoder = [[PSKeyValueDecoder alloc] init];
         while ([result next])
         {
@@ -10822,7 +10822,7 @@ typedef struct {
 {
     NSMutableArray *actions = [[NSMutableArray alloc] init];
     
-    FMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE peer_id=? ORDER BY action_id ASC", _secretPeerIncomingEncryptedTableName], @(peerId)];
+    TGFMResultSet *result = [_database executeQuery:[[NSString alloc] initWithFormat:@"SELECT * FROM %@ WHERE peer_id=? ORDER BY action_id ASC", _secretPeerIncomingEncryptedTableName], @(peerId)];
     PSKeyValueDecoder *decoder = [[PSKeyValueDecoder alloc] init];
     while ([result next])
     {

@@ -7,7 +7,7 @@
  */
 
 //
-//  HPTextViewInternal.h
+//  TGHPTextViewInternal.h
 //
 //  Created by Hans Pinckaers on 29-06-10.
 //
@@ -37,7 +37,7 @@
 
 #import "TGWeakDelegate.h"
 
-@interface HPTextViewInternal : UITextView
+@interface TGHPTextViewInternal : UITextView
 
 @property (nonatomic) bool isPasting;
 
@@ -54,7 +54,7 @@
 
 @end
 
-@protocol HPTextViewInternalDelegate <NSObject>
+@protocol TGHPTextViewInternalDelegate <NSObject>
 
 @required
 

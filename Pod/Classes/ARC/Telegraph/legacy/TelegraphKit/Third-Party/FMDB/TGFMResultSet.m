@@ -1,30 +1,30 @@
-#import "FMResultSet.h"
-#import "FMDatabase.h"
+#import "TGFMResultSet.h"
+#import "TGFMDatabase.h"
 #import "unistd.h"
 
-@interface FMDatabase ()
-- (void)resultSetDidClose:(FMResultSet *)resultSet;
+@interface TGFMDatabase ()
+- (void)resultSetDidClose:(TGFMResultSet *)resultSet;
 @end
 
 
-@interface FMResultSet (Private)
+@interface TGFMResultSet (Private)
 - (NSMutableDictionary *)columnNameToIndexMap;
 - (void)setColumnNameToIndexMap:(NSMutableDictionary *)value;
 @end
 
-@implementation FMResultSet
+@implementation TGFMResultSet
 @synthesize query=_query;
 @synthesize columnNameToIndexMap=_columnNameToIndexMap;
 @synthesize statement=_statement;
 
-+ (id)resultSetWithStatement:(FMStatement *)statement usingParentDatabase:(FMDatabase*)aDB {
++ (id)resultSetWithStatement:(TGFMStatement *)statement usingParentDatabase:(TGFMDatabase*)aDB {
     
-    FMResultSet *rs = [[FMResultSet alloc] init];
+    TGFMResultSet *rs = [[TGFMResultSet alloc] init];
     
     [rs setStatement:statement];
     [rs setParentDB:aDB];
     
-    return FMDBReturnAutoreleased(rs);
+    return TGFMDBReturnAutoreleased(rs);
 }
 
 - (void)finalize {
@@ -35,10 +35,10 @@
 - (void)dealloc {
     [self close];
     
-    FMDBRelease(_query);
+    TGFMDBRelease(_query);
     _query = nil;
     
-    FMDBRelease(_columnNameToIndexMap);
+    TGFMDBRelease(_columnNameToIndexMap);
     _columnNameToIndexMap = nil;
     
 #if ! __has_feature(objc_arc)
@@ -48,7 +48,7 @@
 
 - (void)close {
     [_statement reset];
-    FMDBRelease(_statement);
+    TGFMDBRelease(_statement);
     _statement = nil;
     
     // we don't need this anymore... (i think)
@@ -116,7 +116,7 @@
             [dict setObject:objectValue forKey:columnName];
         }
         
-        return FMDBReturnAutoreleased([dict copy]);
+        return TGFMDBReturnAutoreleased([dict copy]);
     }
     else {
         NSLog(@"Warning: There seem to be no columns in this set.");
@@ -415,7 +415,7 @@
     return [NSString stringWithUTF8String: sqlite3_column_name([_statement statement], columnIdx)];
 }
 
-- (void)setParentDB:(FMDatabase *)newDb {
+- (void)setParentDB:(TGFMDatabase *)newDb {
     _parentDB = newDb;
 }
 

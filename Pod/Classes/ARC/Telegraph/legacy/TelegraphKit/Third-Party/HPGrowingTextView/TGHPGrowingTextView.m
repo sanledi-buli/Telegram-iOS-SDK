@@ -1,15 +1,15 @@
-#import "HPGrowingTextView.h"
-#import "HPTextViewInternal.h"
+#import "TGHPGrowingTextView.h"
+#import "TGHPTextViewInternal.h"
 #import "TGCommon.h"
 
-@interface HPGrowingTextView ()
+@interface TGHPGrowingTextView ()
 {
     bool _ignoreChangeNotification;
 }
 
 @end
 
-@implementation HPGrowingTextView
+@implementation TGHPGrowingTextView
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -26,12 +26,12 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
     {
-        [HPTextViewInternal addTextViewMethods];
+        [TGHPTextViewInternal addTextViewMethods];
     });
     
     CGRect frame = self.frame;
     frame.origin = CGPointZero;
-    _internalTextView = [[HPTextViewInternal alloc] initWithFrame:frame];
+    _internalTextView = [[TGHPTextViewInternal alloc] initWithFrame:frame];
     _internalTextView.delegate = self;
     _internalTextView.contentInset = UIEdgeInsetsZero;
     _internalTextView.showsHorizontalScrollIndicator = NO;
@@ -147,7 +147,7 @@
     if (_internalTextView.frame.size.height > _maxHeight)
         newSizeH = _maxHeight; // not taller than maxHeight
     
-    id<HPGrowingTextViewDelegate> delegate = _delegate;
+    id<TGTGHPGrowingTextViewDelegate> delegate = _delegate;
 
 	if (ABS(_internalTextView.frame.size.height - newSizeH) > FLT_EPSILON)
 	{
@@ -341,7 +341,7 @@
 
 - (void)textViewDidBeginEditing:(UITextView *)__unused textView
 {
-    id<HPGrowingTextViewDelegate> delegate = _delegate;
+    id<TGTGHPGrowingTextViewDelegate> delegate = _delegate;
     
 	if ([delegate respondsToSelector:@selector(growingTextViewDidBeginEditing:)])
 		[delegate growingTextViewDidBeginEditing:self];
@@ -352,7 +352,7 @@
 
 - (void)textViewDidEndEditing:(UITextView *)__unused textView
 {
-    id<HPGrowingTextViewDelegate> delegate = _delegate;
+    id<TGTGHPGrowingTextViewDelegate> delegate = _delegate;
     
 	if ([delegate respondsToSelector:@selector(growingTextViewDidEndEditing:)])
 		[delegate growingTextViewDidEndEditing:self];
@@ -367,7 +367,7 @@
 	
 	if ([atext isEqualToString:@"\n"])
     {
-        id<HPGrowingTextViewDelegate> delegate = _delegate;
+        id<TGTGHPGrowingTextViewDelegate> delegate = _delegate;
         
 		if ([delegate respondsToSelector:@selector(growingTextViewShouldReturn:)])
         {
@@ -386,7 +386,7 @@
 
 - (void)textViewDidChangeSelection:(UITextView *)__unused textView
 {
-    id<HPGrowingTextViewDelegate> delegate = _delegate;
+    id<TGTGHPGrowingTextViewDelegate> delegate = _delegate;
     
 	if ([delegate respondsToSelector:@selector(growingTextViewDidChangeSelection:)])
 		[delegate growingTextViewDidChangeSelection:self];

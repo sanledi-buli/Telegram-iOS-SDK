@@ -16,8 +16,8 @@
 
 #import "TGViewController.h"
 
-#import "HPGrowingTextView.h"
-#import "HPTextViewInternal.h"
+#import "TGHPGrowingTextView.h"
+#import "TGHPTextViewInternal.h"
 
 #import "TGModernButton.h"
 #import "TGModernConversationInputMicButton.h"
@@ -45,7 +45,7 @@ static CGRect viewFrame(UIView *view)
     return result;
 }
 
-@interface TGModernConversationInputTextPanel () <HPGrowingTextViewDelegate, TGModernConversationInputMicButtonDelegate>
+@interface TGModernConversationInputTextPanel () <TGTGHPGrowingTextViewDelegate, TGModernConversationInputMicButtonDelegate>
 {
     CALayer *_stripeLayer;
     UIView *_backgroundView;
@@ -169,12 +169,12 @@ static CGRect viewFrame(UIView *view)
     [self stopAudioRecordingTimer];
 }
 
-- (HPGrowingTextView *)maybeInputField
+- (TGHPGrowingTextView *)maybeInputField
 {
     return _inputField;
 }
 
-- (HPGrowingTextView *)inputField
+- (TGHPGrowingTextView *)inputField
 {
     if (_inputField == nil)
     {
@@ -186,7 +186,7 @@ static CGRect viewFrame(UIView *view)
         
         UIEdgeInsets inputFieldInternalEdgeInsets = [self inputFieldInternalEdgeInsets];
         
-        _inputField = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(inputFieldInternalEdgeInsets.left, inputFieldInternalEdgeInsets.top, _inputFieldClippingContainer.frame.size.width - inputFieldInternalEdgeInsets.left, _inputFieldClippingContainer.frame.size.height)];
+        _inputField = [[TGHPGrowingTextView alloc] initWithFrame:CGRectMake(inputFieldInternalEdgeInsets.left, inputFieldInternalEdgeInsets.top, _inputFieldClippingContainer.frame.size.width - inputFieldInternalEdgeInsets.left, _inputFieldClippingContainer.frame.size.height)];
         _inputField.placeholderView = _inputFieldPlaceholder;
         _inputField.font = TGSystemFontOfSize(16);
         _inputField.clipsToBounds = true;
@@ -206,7 +206,7 @@ static CGRect viewFrame(UIView *view)
     return _inputField;
 }
 
-- (void)growingTextViewDidChange:(HPGrowingTextView *)__unused growingTextView afterSetText:(bool)afterSetText
+- (void)growingTextViewDidChange:(TGHPGrowingTextView *)__unused growingTextView afterSetText:(bool)afterSetText
 {
     int textLength = growingTextView.text.length;
     NSString *text = growingTextView.text;
@@ -595,7 +595,7 @@ static CGRect viewFrame(UIView *view)
     }
 }
 
-- (void)growingTextView:(HPGrowingTextView *)__unused growingTextView willChangeHeight:(float)height duration:(NSTimeInterval)duration animationCurve:(int)animationCurve
+- (void)growingTextView:(TGHPGrowingTextView *)__unused growingTextView willChangeHeight:(float)height duration:(NSTimeInterval)duration animationCurve:(int)animationCurve
 {
     UIEdgeInsets inputFieldInsets = [self inputFieldInsets];
     CGFloat inputContainerHeight = MAX([self baseHeight], height - 8 + inputFieldInsets.top + inputFieldInsets.bottom);
@@ -1002,14 +1002,14 @@ static CGRect viewFrame(UIView *view)
     }
 }
 
-- (void)growingTextView:(HPGrowingTextView *)__unused growingTextView didPasteImages:(NSArray *)images
+- (void)growingTextView:(TGHPGrowingTextView *)__unused growingTextView didPasteImages:(NSArray *)images
 {    
     id<TGModernConversationInputTextPanelDelegate> delegate = (id<TGModernConversationInputTextPanelDelegate>)self.delegate;
     if ([delegate respondsToSelector:@selector(inputPanelRequestedSendImages:images:)])
         [delegate inputPanelRequestedSendImages:self images:images];
 }
 
-- (void)growingTextView:(HPGrowingTextView *)__unused growingTextView didPasteData:(NSData *)data
+- (void)growingTextView:(TGHPGrowingTextView *)__unused growingTextView didPasteData:(NSData *)data
 {
     id<TGModernConversationInputTextPanelDelegate> delegate = (id<TGModernConversationInputTextPanelDelegate>)self.delegate;
     if ([delegate respondsToSelector:@selector(inputPanelRequestedSendData:data:)])

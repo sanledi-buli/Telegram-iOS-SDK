@@ -8,7 +8,7 @@
 
 #import "TGModernConversationInputPanel.h"
 
-@class HPGrowingTextView;
+@class TGHPGrowingTextView;
 @class TGModernConversationInputTextPanel;
 @class TGDocumentMediaAttachment;
 
@@ -36,7 +36,7 @@
 @property (nonatomic, strong) UIButton *attachButton;
 
 @property (nonatomic, strong) UIView *inputFieldClippingContainer;
-@property (nonatomic, strong) HPGrowingTextView *inputField;
+@property (nonatomic, strong) TGHPGrowingTextView *inputField;
 @property (nonatomic, strong) UIView *inputFieldPlaceholder;
 
 @property (nonatomic) UIInterfaceOrientation interfaceOrientation;
@@ -45,7 +45,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame accessoryView:(UIView *)panelAccessoryView;
 
-- (HPGrowingTextView *)maybeInputField;
+- (TGHPGrowingTextView *)maybeInputField;
 
 - (void)audioRecordingStarted;
 - (void)audioRecordingFinished;

@@ -1,8 +1,8 @@
 
-#import "HPTextViewInternal.h"
+#import "TGHPTextViewInternal.h"
 
 
-#import "HPGrowingTextView.h"
+#import "TGHPGrowingTextView.h"
 
 #import "TGHacks.h"
 #import "TGImageUtils.h"
@@ -10,14 +10,14 @@
 #import <objc/message.h>
 #import "TGCommon.h"
 
-@implementation HPTextViewInternal
+@implementation TGHPTextViewInternal
 
 + (void)addTextViewMethods
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^
     {
-        InjectInstanceMethodFromAnotherClass([HPTextViewInternal class], [HPTextViewInternal class], @selector(textViewAdjustScrollRange:animated:), NSSelectorFromString(TGEncodeText(@"`tdspmmSbohfUpWjtjcmf;bojnbufe;", -1)));
+        InjectInstanceMethodFromAnotherClass([TGHPTextViewInternal class], [TGHPTextViewInternal class], @selector(textViewAdjustScrollRange:animated:), NSSelectorFromString(TGEncodeText(@"`tdspmmSbohfUpWjtjcmf;bojnbufe;", -1)));
     });
 }
 
@@ -133,9 +133,9 @@
     if (result)
     {
         id delegate = _responderStateDelegate.object;
-        if (delegate != nil && [delegate conformsToProtocol:@protocol(HPTextViewInternalDelegate)])
+        if (delegate != nil && [delegate conformsToProtocol:@protocol(TGHPTextViewInternalDelegate)])
         {
-            [(id<HPTextViewInternalDelegate>)delegate hpTextViewChangedResponderState:true];
+            [(id<TGHPTextViewInternalDelegate>)delegate hpTextViewChangedResponderState:true];
         }
     }
     return result;
@@ -149,9 +149,9 @@
     if (result)
     {
         id delegate = _responderStateDelegate.object;
-        if (delegate != nil && [delegate conformsToProtocol:@protocol(HPTextViewInternalDelegate)])
+        if (delegate != nil && [delegate conformsToProtocol:@protocol(TGHPTextViewInternalDelegate)])
         {
-            [(id<HPTextViewInternalDelegate>)delegate hpTextViewChangedResponderState:false];
+            [(id<TGHPTextViewInternalDelegate>)delegate hpTextViewChangedResponderState:false];
         }
     }
     return result;
@@ -172,10 +172,10 @@
     if (gifData != nil)
     {
         id delegate = self.delegate;
-        if ([delegate isKindOfClass:[HPGrowingTextView class]])
+        if ([delegate isKindOfClass:[TGHPGrowingTextView class]])
         {
-            HPGrowingTextView *textView = delegate;
-            NSObject<HPGrowingTextViewDelegate> *textViewDelegate = (NSObject<HPGrowingTextViewDelegate> *)textView.delegate;
+            TGHPGrowingTextView *textView = delegate;
+            NSObject<TGTGHPGrowingTextViewDelegate> *textViewDelegate = (NSObject<TGTGHPGrowingTextViewDelegate> *)textView.delegate;
             if ([textViewDelegate respondsToSelector:@selector(growingTextView:didPasteData:)])
                 [textViewDelegate growingTextView:textView didPasteData:gifData];
         }
@@ -201,10 +201,10 @@
         if (images.count != 0)
         {
             id delegate = self.delegate;
-            if ([delegate isKindOfClass:[HPGrowingTextView class]])
+            if ([delegate isKindOfClass:[TGHPGrowingTextView class]])
             {
-                HPGrowingTextView *textView = delegate;
-                NSObject<HPGrowingTextViewDelegate> *textViewDelegate = (NSObject<HPGrowingTextViewDelegate> *)textView.delegate;
+                TGHPGrowingTextView *textView = delegate;
+                NSObject<TGTGHPGrowingTextViewDelegate> *textViewDelegate = (NSObject<TGTGHPGrowingTextViewDelegate> *)textView.delegate;
                 if ([textViewDelegate respondsToSelector:@selector(growingTextView:didPasteImages:)])
                     [textViewDelegate growingTextView:textView didPasteImages:images];
             }

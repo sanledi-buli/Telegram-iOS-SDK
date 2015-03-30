@@ -21,12 +21,12 @@
 #endif
 #endif
 
-@class FMDatabase;
-@class FMStatement;
+@class TGFMDatabase;
+@class TGFMStatement;
 
-@interface FMResultSet : NSObject {
-    FMDatabase          *_parentDB;
-    FMStatement         *_statement;
+@interface TGFMResultSet : NSObject {
+    TGFMDatabase          *_parentDB;
+    TGFMStatement         *_statement;
     
     NSString            *_query;
     NSMutableDictionary *_columnNameToIndexMap;
@@ -35,13 +35,13 @@
 
 @property (nonatomic, retain) NSString *query;
 @property (nonatomic, retain) NSMutableDictionary *columnNameToIndexMap;
-@property (nonatomic, retain) FMStatement *statement;
+@property (nonatomic, retain) TGFMStatement *statement;
 
-+ (id)resultSetWithStatement:(FMStatement *)statement usingParentDatabase:(FMDatabase*)aDB;
++ (id)resultSetWithStatement:(TGFMStatement *)statement usingParentDatabase:(TGFMDatabase*)aDB;
 
 - (void)close;
 
-- (void)setParentDB:(FMDatabase *)newDb;
+- (void)setParentDB:(TGFMDatabase *)newDb;
 
 - (BOOL)next;
 - (BOOL)hasAnotherRow;

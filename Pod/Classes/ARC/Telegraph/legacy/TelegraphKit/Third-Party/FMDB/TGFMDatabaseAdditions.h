@@ -7,7 +7,7 @@
  */
 
 //
-//  FMDatabaseAdditions.h
+//  TGFMDatabaseAdditions.h
 //  fmkit
 //
 //  Created by August Mueller on 10/30/05.
@@ -15,7 +15,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@interface FMDatabase (FMDatabaseAdditions)
+@interface TGFMDatabase (TGFMDatabaseAdditions)
 
 
 - (int)intForQuery:(NSString*)objs, ...;
@@ -32,8 +32,8 @@
 
 
 - (BOOL)tableExists:(NSString*)tableName;
-- (FMResultSet*)getSchema;
-- (FMResultSet*)getTableSchema:(NSString*)tableName;
+- (TGFMResultSet*)getSchema;
+- (TGFMResultSet*)getTableSchema:(NSString*)tableName;
 
 - (BOOL)columnExists:(NSString*)columnName inTableWithName:(NSString*)tableName;
 

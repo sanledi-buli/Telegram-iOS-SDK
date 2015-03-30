@@ -35,30 +35,30 @@
 
 #import <UIKit/UIKit.h>
 
-@class HPGrowingTextView;
-@class HPTextViewInternal;
+@class TGHPGrowingTextView;
+@class TGHPTextViewInternal;
 
-@protocol HPGrowingTextViewDelegate <NSObject>
+@protocol TGTGHPGrowingTextViewDelegate <NSObject>
 
 @optional
 
-- (void)growingTextViewDidBeginEditing:(HPGrowingTextView *)growingTextView;
-- (void)growingTextViewDidEndEditing:(HPGrowingTextView *)growingTextView;
+- (void)growingTextViewDidBeginEditing:(TGHPGrowingTextView *)growingTextView;
+- (void)growingTextViewDidEndEditing:(TGHPGrowingTextView *)growingTextView;
 
-- (BOOL)growingTextView:(HPGrowingTextView *)growingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
-- (void)growingTextViewDidChange:(HPGrowingTextView *)growingTextView afterSetText:(bool)afterSetText;
+- (BOOL)growingTextView:(TGHPGrowingTextView *)growingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
+- (void)growingTextViewDidChange:(TGHPGrowingTextView *)growingTextView afterSetText:(bool)afterSetText;
 
-- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height duration:(NSTimeInterval)duration animationCurve:(int)animationCurve;
+- (void)growingTextView:(TGHPGrowingTextView *)growingTextView willChangeHeight:(float)height duration:(NSTimeInterval)duration animationCurve:(int)animationCurve;
 
-- (void)growingTextViewDidChangeSelection:(HPGrowingTextView *)growingTextView;
-- (BOOL)growingTextViewShouldReturn:(HPGrowingTextView *)growingTextView;
+- (void)growingTextViewDidChangeSelection:(TGHPGrowingTextView *)growingTextView;
+- (BOOL)growingTextViewShouldReturn:(TGHPGrowingTextView *)growingTextView;
 
-- (void)growingTextView:(HPGrowingTextView *)growingTextView didPasteImages:(NSArray *)images;
-- (void)growingTextView:(HPGrowingTextView *)growingTextView didPasteData:(NSData *)data;
+- (void)growingTextView:(TGHPGrowingTextView *)growingTextView didPasteImages:(NSArray *)images;
+- (void)growingTextView:(TGHPGrowingTextView *)growingTextView didPasteData:(NSData *)data;
 
 @end
 
-@interface HPGrowingTextView : UIView <UITextViewDelegate>
+@interface TGHPGrowingTextView : UIView <UITextViewDelegate>
 
 @property (nonatomic, strong) UIView *placeholderView;
 
@@ -68,11 +68,11 @@
 @property (nonatomic) CGFloat minHeight;
 @property (nonatomic) BOOL animateHeightChange;
 @property (nonatomic) NSTimeInterval animationDuration;
-@property (nonatomic, strong) HPTextViewInternal *internalTextView;
+@property (nonatomic, strong) TGHPTextViewInternal *internalTextView;
 
 @property (nonatomic) bool oneTimeLongAnimation;
 
-@property (nonatomic, weak) id<HPGrowingTextViewDelegate> delegate;
+@property (nonatomic, weak) id<TGTGHPGrowingTextViewDelegate> delegate;
 @property (nonatomic,strong) NSString *text;
 @property (nonatomic,strong) UIFont *font;
 @property (nonatomic,strong) UIColor *textColor;

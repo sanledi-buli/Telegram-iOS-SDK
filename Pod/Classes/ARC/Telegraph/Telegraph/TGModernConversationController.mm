@@ -16,8 +16,8 @@
 #import "TGObserverProxy.h"
 #import "TGActionSheet.h"
 
-#import "HPGrowingTextView.h"
-#import "HPTextViewInternal.h"
+#import "TGHPGrowingTextView.h"
+#import "TGHPTextViewInternal.h"
 
 #import "TGMessageModernConversationItem.h"
 #import "TGMessage.h"
@@ -116,7 +116,7 @@ typedef enum {
     TGModernConversationPanelAnimationFade = 2
 } TGModernConversationPanelAnimation;
 
-@interface TGModernConversationController () <UICollectionViewDataSource, TGModernConversationViewLayoutDelegate, UIViewControllerTransitioningDelegate, HPGrowingTextViewDelegate, UIGestureRecognizerDelegate, TGImagePickerControllerDelegate, TGLegacyCameraControllerDelegate, TGModernConversationInputTextPanelDelegate, TGModernConversationEditingPanelDelegate, TGModernConversationTitleViewDelegate, TGForwardContactPickerControllerDelegate, TGModernConversationAudioPlayerDelegate, TGAudioRecorderDelegate, NSUserActivityDelegate>
+@interface TGModernConversationController () <UICollectionViewDataSource, TGModernConversationViewLayoutDelegate, UIViewControllerTransitioningDelegate, TGTGHPGrowingTextViewDelegate, UIGestureRecognizerDelegate, TGImagePickerControllerDelegate, TGLegacyCameraControllerDelegate, TGModernConversationInputTextPanelDelegate, TGModernConversationEditingPanelDelegate, TGModernConversationTitleViewDelegate, TGForwardContactPickerControllerDelegate, TGModernConversationAudioPlayerDelegate, TGAudioRecorderDelegate, NSUserActivityDelegate>
 {
     bool _alreadyHadWillAppear;
     bool _alreadyHadDidAppear;
