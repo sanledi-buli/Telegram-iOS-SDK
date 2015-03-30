@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "Telegram-iOS-SDK"
-  s.version          = "0.0.3"
+  s.version          = "0.0.4"
   s.summary          = "Telegram-iOS-SDK. Source code of Telegram 2.8 ported to pods"
   s.description      = <<-DESC
                        arm64 compatible. Work in progress.
@@ -35,7 +35,6 @@ Pod::Spec.new do |s|
   s.dependency 'BLContactsViewController'   
   s.dependency 'pop'
   s.ios.vendored_library = 'Pod/Libs/**'
-  s.dependency 'iOS-WebP'
   s.library = 'z', 'crypto'
    
 end

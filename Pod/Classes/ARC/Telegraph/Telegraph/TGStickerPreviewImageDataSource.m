@@ -18,7 +18,7 @@
 
 #import "TGMediaStoreContext.h"
 
-#import "UIImage+WebP.h"
+//#import "UIImage+WebP.h"
 #import "JPNG.h"
 
 #import "TGDocumentMediaAttachment.h"
@@ -280,7 +280,7 @@ static ASQueue *taskManagementQueue()
         }
     }
     else*/
-    {
+   /* {
         NSString *cachedFilePath = [fileDirectory stringByAppendingPathComponent:@"thumbnail.cached.bin"];
         if ([[NSFileManager defaultManager] fileExistsAtPath:cachedFilePath isDirectory:NULL])
         {
@@ -300,7 +300,7 @@ static ASQueue *taskManagementQueue()
             if (compressedData != nil)
                 [compressedData writeToFile:cachedFilePath atomically:true];
         }
-    }
+    }*/
     
     thumbnailSourceImage = image;
     

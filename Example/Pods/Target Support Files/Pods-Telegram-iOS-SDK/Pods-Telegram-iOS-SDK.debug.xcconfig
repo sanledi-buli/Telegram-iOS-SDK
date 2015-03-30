@@ -1,9 +1,9 @@
 CLANG_CXX_LANGUAGE_STANDARD = c++11
 CLANG_CXX_LIBRARY = libc++
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/BLContactsViewController" "${PODS_ROOT}/Headers/Public/BLPhoneFormat" "${PODS_ROOT}/Headers/Public/Telegram-iOS-SDK" "${PODS_ROOT}/Headers/Public/iOS-WebP" "${PODS_ROOT}/Headers/Public/libwebp" "${PODS_ROOT}/Headers/Public/libwebp/webp" "${PODS_ROOT}/Headers/Public/pop"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/BLContactsViewController" "${PODS_ROOT}/Headers/Public/BLPhoneFormat" "${PODS_ROOT}/Headers/Public/Telegram-iOS-SDK" "${PODS_ROOT}/Headers/Public/pop"
 LIBRARY_SEARCH_PATHS = "$(PODS_ROOT)/../../Pod/Libs" "$(PODS_ROOT)/../../Pod/Libs"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/BLContactsViewController" -isystem "${PODS_ROOT}/Headers/Public/BLPhoneFormat" -isystem "${PODS_ROOT}/Headers/Public/Telegram-iOS-SDK" -isystem "${PODS_ROOT}/Headers/Public/iOS-WebP" -isystem "${PODS_ROOT}/Headers/Public/libwebp" -isystem "${PODS_ROOT}/Headers/Public/libwebp/webp" -isystem "${PODS_ROOT}/Headers/Public/pop"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"Pods-Telegram-iOS-SDK-BLContactsViewController" -l"Pods-Telegram-iOS-SDK-BLPhoneFormat" -l"Pods-Telegram-iOS-SDK-Telegram-iOS-SDK" -l"Pods-Telegram-iOS-SDK-iOS-WebP" -l"Pods-Telegram-iOS-SDK-libwebp" -l"Pods-Telegram-iOS-SDK-pop" -l"c++" -l"crypto" -l"opus" -l"stdc++" -l"z" -framework "AddressBook" -framework "AddressBookUI" -framework "CoreLocation" -framework "libwebp"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/BLContactsViewController" -isystem "${PODS_ROOT}/Headers/Public/BLPhoneFormat" -isystem "${PODS_ROOT}/Headers/Public/Telegram-iOS-SDK" -isystem "${PODS_ROOT}/Headers/Public/pop"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"Pods-Telegram-iOS-SDK-BLContactsViewController" -l"Pods-Telegram-iOS-SDK-BLPhoneFormat" -l"Pods-Telegram-iOS-SDK-Telegram-iOS-SDK" -l"Pods-Telegram-iOS-SDK-pop" -l"c++" -l"crypto" -l"opus" -l"stdc++" -l"z" -framework "AddressBook" -framework "AddressBookUI" -framework "CoreLocation"
 OTHER_LIBTOOLFLAGS = $(OTHER_LDFLAGS)
 PODS_ROOT = ${SRCROOT}/Pods

@@ -20,7 +20,6 @@
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
-		9AA4634784F97F06B1DBBBC5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF67D6A030FA51685C9733D /* libPods.a */; };
 		9D33F75AEF4BF200D5CCF6C9 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA3ABC6D3980C9EAD064424 /* libPods-Tests.a */; };
 		F9F105099AAD99D85FBEF440 /* libPods-Telegram-iOS-SDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC1F26C95B9CE66369B869C /* libPods-Telegram-iOS-SDK.a */; };
 /* End PBXBuildFile section */
@@ -76,7 +75,6 @@
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
 				F9F105099AAD99D85FBEF440 /* libPods-Telegram-iOS-SDK.a in Frameworks */,
-				9AA4634784F97F06B1DBBBC5 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,7 +368,7 @@
 		};
 		5B21CFF49F8812E15875B09C /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -378,7 +376,7 @@
 			name = "Copy Pods Resources";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Telegram-iOS-SDK/Pods-Telegram-iOS-SDK-resources.sh\"\n";
 			showEnvVarsInLog = 0;
@@ -473,7 +471,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -506,7 +504,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -522,7 +520,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Telegram-iOS-SDK/Sources/Supporting Files/Telegram-iOS-SDK-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/Telegram-iOS-SDK/Sources/Supporting Files/Telegram-iOS-SDK-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -537,7 +535,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Telegram-iOS-SDK/Sources/Supporting Files/Telegram-iOS-SDK-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/Telegram-iOS-SDK/Sources/Supporting Files/Telegram-iOS-SDK-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

@@ -1,8 +1,8 @@
 {
   "name": "Telegram-iOS-SDK",
-  "version": "0.1.0",
+  "version": "0.0.4",
   "summary": "Telegram-iOS-SDK. Source code of Telegram 2.8 ported to pods",
-  "description": "                       arm64 compatible\n",
+  "description": "                       arm64 compatible. Work in progress.\n                       Feel free to contribute.\n",
   "homepage": "https://github.com/batkov/Telegram-iOS-SDK",
   "license": "GPLv2",
   "authors": {
@@ -10,11 +10,11 @@
   },
   "source": {
     "git": "https://github.com/batkov/Telegram-iOS-SDK.git",
-    "tag": "0.1.0"
+    "tag": "0.0.4"
   },
   "social_media_url": "https://twitter.com/batkov111",
   "platforms": {
-    "ios": "6.0"
+    "ios": "7.0"
   },
   "requires_arc": "Pod/Classes/ARC/**/*",
   "xcconfig": {
@@ -30,8 +30,7 @@
   "frameworks": [
     "AddressBook",
     "AddressBookUI",
-    "CoreLocation",
-    "libwebp"
+    "CoreLocation"
   ],
   "dependencies": {
     "BLPhoneFormat": [
@@ -41,9 +40,6 @@
 
     ],
     "pop": [
-
-    ],
-    "iOS-WebP": [
 
     ]
   },

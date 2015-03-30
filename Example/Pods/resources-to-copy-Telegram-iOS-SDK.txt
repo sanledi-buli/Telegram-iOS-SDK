@@ -1,0 +1,3 @@
+/Users/hariton.batkov/Projects/Pods/Telegram-IOS-SDK/Example/Build/Products/Debug-iphoneos/BLContactsViewController.bundle
+/Users/hariton.batkov/Projects/Pods/Telegram-IOS-SDK/Example/Build/Products/Debug-iphoneos/BLPhoneFormat.bundle
+/Users/hariton.batkov/Projects/Pods/Telegram-IOS-SDK/Example/Build/Products/Debug-iphoneos/Telegram-iOS-SDK.bundle

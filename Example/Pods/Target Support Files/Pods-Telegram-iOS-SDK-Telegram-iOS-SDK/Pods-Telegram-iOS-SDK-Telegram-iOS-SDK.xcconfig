@@ -1,2 +1,2 @@
 PODS_TELEGRAM_IOS_SDK_TELEGRAM_IOS_SDK_LIBRARY_SEARCH_PATHS = "$(PODS_ROOT)/../../Pod/Libs" "$(PODS_ROOT)/../../Pod/Libs"
-PODS_TELEGRAM_IOS_SDK_TELEGRAM_IOS_SDK_OTHER_LDFLAGS = -ObjC -l"crypto" -l"opus" -l"stdc++" -l"z" -framework "AddressBook" -framework "AddressBookUI" -framework "CoreLocation" -framework "libwebp"
+PODS_TELEGRAM_IOS_SDK_TELEGRAM_IOS_SDK_OTHER_LDFLAGS = -ObjC -l"crypto" -l"opus" -l"stdc++" -l"z" -framework "AddressBook" -framework "AddressBookUI" -framework "CoreLocation"

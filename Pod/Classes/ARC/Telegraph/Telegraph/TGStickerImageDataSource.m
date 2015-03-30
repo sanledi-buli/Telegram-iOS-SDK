@@ -18,7 +18,7 @@
 
 #import "TGMediaStoreContext.h"
 
-#import "UIImage+WebP.h"
+//#import "UIImage+WebP.h"
 #import "JPNG.h"
 
 #import "TGDocumentMediaAttachment.h"
@@ -289,7 +289,7 @@ static ASQueue *taskManagementQueue()
     
     UIImage *image = nil;
     
-    if ([args[@"mime-type"] hasPrefix:@"image/webp"])
+    /*if ([args[@"mime-type"] hasPrefix:@"image/webp"])
     {
         NSString *cachedFilePath = [fileDirectory stringByAppendingPathComponent:@"cached.bin"];
         
@@ -344,7 +344,7 @@ static ASQueue *taskManagementQueue()
         }
         
         image = TGBlurredAlphaImage(image, CGSizeMake(size.width / 2.0f, size.height / 2.0f));
-    }
+    }*/
     
     thumbnailSourceImage = image;
     
