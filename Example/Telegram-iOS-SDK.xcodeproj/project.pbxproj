@@ -368,7 +368,7 @@
 		};
 		5B21CFF49F8812E15875B09C /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -376,7 +376,7 @@
 			name = "Copy Pods Resources";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Telegram-iOS-SDK/Pods-Telegram-iOS-SDK-resources.sh\"\n";
 			showEnvVarsInLog = 0;

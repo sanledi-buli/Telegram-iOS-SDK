@@ -1,15 +1,9 @@
 # Telegram-iOS-SDK
 
-[![CI Status](http://img.shields.io/travis/Hariton Batkov/Telegram-iOS-SDK.svg?style=flat)](https://travis-ci.org/Hariton Batkov/Telegram-iOS-SDK)
-[![Version](https://img.shields.io/cocoapods/v/Telegram-iOS-SDK.svg?style=flat)](http://cocoadocs.org/docsets/Telegram-iOS-SDK)
-[![License](https://img.shields.io/cocoapods/l/Telegram-iOS-SDK.svg?style=flat)](http://cocoadocs.org/docsets/Telegram-iOS-SDK)
-[![Platform](https://img.shields.io/cocoapods/p/Telegram-iOS-SDK.svg?style=flat)](http://cocoadocs.org/docsets/Telegram-iOS-SDK)
+![alt tag](https://github.com/batkov/Telegram-iOS-SDK/blob/master/Screenshots/Telegram-iOS-SDK.gif)
 
-## Usage
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Requirements
+Currently SDK is only the demonstration that it works.
+Feen free to contribute or create issues.
 
 ## Installation
 

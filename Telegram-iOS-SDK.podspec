@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "Telegram-iOS-SDK"
-  s.version          = "0.0.4"
+  s.version          = "0.0.5"
   s.summary          = "Telegram-iOS-SDK. Source code of Telegram 2.8 ported to pods"
   s.description      = <<-DESC
                        arm64 compatible. Work in progress.
@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Pod/Classes/**/*.{h,m,c,cpp,mm}'
   s.compiler_flags = '-Wall'
   s.resource_bundles = {
-    'Telegram-iOS-SDK' => ['Pod/Assets/*']
+    'Telegram-iOS-SDK' => ['Pod/Assets/**/*']
   }
   s.frameworks = 'AddressBook', 'AddressBookUI', 'CoreLocation'
   s.dependency 'BLPhoneFormat'
