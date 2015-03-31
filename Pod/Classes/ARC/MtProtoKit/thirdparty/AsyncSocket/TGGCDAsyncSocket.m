@@ -953,7 +953,7 @@ enum TGGCDAsyncSocketConfig
  * The GCDAsyncSpecialPacket encompasses special instructions for interruptions in the read/write queues.
  * This class my be altered to support more than just TLS in the future.
 **/
-@interface GCDAsyncSpecialPacket : NSObject
+@interface TGGCDAsyncSpecialPacket : NSObject
 {
   @public
 	NSDictionary *tlsSettings;
@@ -961,7 +961,7 @@ enum TGGCDAsyncSocketConfig
 - (id)initWithTLSSettings:(NSDictionary *)settings;
 @end
 
-@implementation GCDAsyncSpecialPacket
+@implementation TGGCDAsyncSpecialPacket
 
 - (id)initWithTLSSettings:(NSDictionary *)settings
 {
@@ -4006,7 +4006,7 @@ enum TGGCDAsyncSocketConfig
 			[readQueue removeObjectAtIndex:0];
 			
 			
-			if ([currentRead isKindOfClass:[GCDAsyncSpecialPacket class]])
+			if ([currentRead isKindOfClass:[TGGCDAsyncSpecialPacket class]])
 			{
 				LogVerbose(@"Dequeued GCDAsyncSpecialPacket");
 				
@@ -5255,7 +5255,7 @@ enum TGGCDAsyncSocketConfig
 			[writeQueue removeObjectAtIndex:0];
 			
 			
-			if ([currentWrite isKindOfClass:[GCDAsyncSpecialPacket class]])
+			if ([currentWrite isKindOfClass:[TGGCDAsyncSpecialPacket class]])
 			{
 				LogVerbose(@"Dequeued GCDAsyncSpecialPacket");
 				
@@ -5852,7 +5852,7 @@ enum TGGCDAsyncSocketConfig
         tlsSettings = [NSDictionary dictionary];
     }
 	
-	GCDAsyncSpecialPacket *packet = [[GCDAsyncSpecialPacket alloc] initWithTLSSettings:tlsSettings];
+	TGGCDAsyncSpecialPacket *packet = [[TGGCDAsyncSpecialPacket alloc] initWithTLSSettings:tlsSettings];
 	
 	dispatch_async(socketQueue, ^{ @autoreleasepool {
 		
@@ -5884,7 +5884,7 @@ enum TGGCDAsyncSocketConfig
 		
 		#if TARGET_OS_IPHONE
 		{
-			GCDAsyncSpecialPacket *tlsPacket = (GCDAsyncSpecialPacket *)currentRead;
+			TGGCDAsyncSpecialPacket *tlsPacket = (TGGCDAsyncSpecialPacket *)currentRead;
 			NSDictionary *tlsSettings = tlsPacket->tlsSettings;
 			
 			NSNumber *value;
@@ -6173,7 +6173,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 		
 	OSStatus status;
 	
-	GCDAsyncSpecialPacket *tlsPacket = (GCDAsyncSpecialPacket *)currentRead;
+	TGGCDAsyncSpecialPacket *tlsPacket = (TGGCDAsyncSpecialPacket *)currentRead;
 	NSDictionary *tlsSettings = tlsPacket->tlsSettings;
 	
 	// Create SSLContext, and setup IO callbacks and connection ref
@@ -6681,10 +6681,10 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 		return;
 	}
 	
-	NSAssert([currentRead isKindOfClass:[GCDAsyncSpecialPacket class]], @"Invalid read packet for startTLS");
-	NSAssert([currentWrite isKindOfClass:[GCDAsyncSpecialPacket class]], @"Invalid write packet for startTLS");
+	NSAssert([currentRead isKindOfClass:[TGGCDAsyncSpecialPacket class]], @"Invalid read packet for startTLS");
+	NSAssert([currentWrite isKindOfClass:[TGGCDAsyncSpecialPacket class]], @"Invalid write packet for startTLS");
 	
-	GCDAsyncSpecialPacket *tlsPacket = (GCDAsyncSpecialPacket *)currentRead;
+	TGGCDAsyncSpecialPacket *tlsPacket = (TGGCDAsyncSpecialPacket *)currentRead;
 	CFDictionaryRef tlsSettings = (__bridge CFDictionaryRef)tlsPacket->tlsSettings;
 	
 	// Getting an error concerning kCFStreamPropertySSLSettings ?
